@@ -34,7 +34,6 @@
             <input type="text"  value="" id="pwd"/>
         </td>
     </tr>
-    <tr id="hh"></tr>
 </table>
 <script>
     function test() {
@@ -46,9 +45,7 @@
                 $("#userName").val(data.userName);
                 $("#pwd").val(data.pwd);
                 $("#url").val(data.url);
-                for (var i = 0;i < data.pwd.length; i++){
-                    $("#hh").append("<td>data.pwd[i]</td>");
-                }
+
             }
         });
     }
