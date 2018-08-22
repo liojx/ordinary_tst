@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+<table>
+    <tr>
+        <td>
+            <input type="button" value="Get DB Property" onclick="test();"/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <SPAN style="font-weight: 900">URL</SPAN>
+        </td>
+        <td>
+            <input type="text"  value="" id="url"/>
+        </td>
+    <tr>
+        <td>
+            <SPAN style="font-weight: 900">USERNAME</SPAN>
+        </td>
+        <td>
+            <input type="text"  value="" id="userName"/>
+        </td>
+    <tr>
+        <td>
+            <SPAN style="font-weight: 900">PASSWORD</SPAN>
+        </td>
+        <td>
+            <input type="text"  value="" id="pwd"/>
+        </td>
+    </tr>
+</table>
+<script>
+    function test() {
+        $.ajax({
+            url : '/T31/getDbProperty',
+            type : 'POST',
+            data : {},
+            success : function (data) {
+                $("#userName").val(data.userName);
+                $("#pwd").val(data.pwd);
+                $("#url").val(data.url);
+
+            }
+        });
+    }
+</script>
+</body>
+</html>

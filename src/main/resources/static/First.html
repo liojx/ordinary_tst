@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script>
+//        window.onload = function (ev) {
+//            alert('public');
+//        }
+    </script>
+    <script src="js/jquery-1.7.1.min.js"></script>
+</head>
+<body>
+    <table>
+        <tr>
+            <td>
+                <span>NAME:</span>
+            </td>
+            <td>
+                <input type="text" id="nname" />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <span>Nick NAME:</span>
+            </td>
+            <td>
+                <input type="text" name="" id="nickname"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type="button" value="TEST" onclick="test();"/>
+            </td>
+        </tr>
+    </table>
+<script>
+    function test() {
+//        alert(123);
+//        alert($("#nname"));
+        var json_data={
+            "name" : $("#nname").val(),
+            "nickName" : $("#nickname").val(),
+            "items" : [ {"name" : "中文", "value" : 10 },
+                {"name": "item2",  "value" : 20 }
+            ]
+        };
+//        alert(JSON.stringify(json_data));
+        $.ajax({
+            url : '/T31/req',
+            type : 'POST',
+            data : JSON.stringify(json_data),
+            contentType : 'application/json;charset=utf-8'   //中文需要加上charset=utf-8才正确
+        });
+    }
+</script>
+</body>
+</html>
