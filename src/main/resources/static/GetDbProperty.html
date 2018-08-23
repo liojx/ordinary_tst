@@ -34,7 +34,6 @@
             <input type="text"  value="" id="pwd"/>
         </td>
     </tr>
-    <tr id="trr"></tr>
 </table>
 <script>
     function test() {
@@ -46,16 +45,9 @@
                 $("#userName").val(data.userName);
                 $("#pwd").val(data.pwd);
                 $("#url").val(data.url);
-                //rinixianren
-                for (var i = 0; i < data.pwd.length; i++){
-                    $("#trr").append("<td>"+data.pwd[i]+"</td>");
-                }
+                // ri
             }
         });
-    }
-    
-    function good() {
-        
     }
 </script>
 </body>
