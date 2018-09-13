@@ -42,6 +42,12 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 		
+		<!-- file upload -->
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.3.1</version>
+		</dependency>
 		
 	</dependencies>
 
