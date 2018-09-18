@@ -49,6 +49,31 @@
 			<version>1.3.1</version>
 		</dependency>
 		
+		<!-- getter setter 注解 -->
+		<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.16.14</version>
+        </dependency>
+        
+        <!-- 阿里的数据库操作 -->
+         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>1.0.11</version>
+        </dependency>
+        
+        <!-- Spring test -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+        </dependency>
+        
+        <!-- mysql 驱动 -->
+         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
 	</dependencies>
 
 	<build>
