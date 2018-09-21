@@ -5,7 +5,7 @@ import java.util.*;
 
 public class ContCycle {
 
-	static final String FILE_PATH = "C:\\Users\\Lsj\\git\\clinic-web";
+	static final String FILE_PATH = "C:\\doctorwork_lsj\\eclipse-workspace\\qiedoctor-mp";
 
 	static final String ANNO_PATH = "C:\\doctorwork_lsj\\文档资料\\used-annotation";
 
