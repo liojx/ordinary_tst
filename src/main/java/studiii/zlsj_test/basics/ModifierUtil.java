@@ -80,7 +80,7 @@ public class ModifierUtil {
 			 do {
 				 arr.add(cc);
 				 ++cc;
-			 }while(cc <= (down-up+indexOf));// C7选3，那么第1 位可以排 1到7-3+1 = 5，第2位 能排2到7-3+2=6，第3位只能排3到7-3+3=7
+			 }while(cc <= (down-up+indexOf));// 例如C7选3，那么第1 位可以排 1到7-3+1 = 5，第2位 能排2到7-3+2=6，第3位只能排3到7-3+3=7
 			 map.put(ac, arr);
 		 }
 		 for(int i =0;i<map.size();i++) {
@@ -89,6 +89,7 @@ public class ModifierUtil {
 //				 System.out.println(j);
 			 }
 		 }
+		 
 		 
 		 /**笨办法选6位**/
 		 List<Integer> l1 = map.get(1);		 
@@ -166,6 +167,7 @@ public class ModifierUtil {
 //			 Logger.log(aaa[0] +"-"+aaa[1]+"-"+aaa[2] +"-"+aaa[3]+"-"+aaa[4]+"-"+aaa[5]);
 ////			 System.out.println(aaa[0] +"-"+aaa[1]+"-"+aaa[2] +"-"+aaa[3]+"-"+aaa[4]+"-"+aaa[5]);
 //		 }
+		 
 		 // 批量存入库
 		 int num = 0;
 		 int total = all.size();
