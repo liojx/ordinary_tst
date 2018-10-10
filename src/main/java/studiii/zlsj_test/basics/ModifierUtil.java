@@ -58,14 +58,14 @@ public class ModifierUtil {
 		
 	}
 	
-	 static int[] C(int fill, int up,int down) {
+	 static void C(int up,int down) {
 		 //边界条件
 		 //边界条件不满足，继续递归
 		 //边界条件满足，跳出递归
 		 
 		 // 这里边界条件： 当你的填充值fill == down 数值时跳出递归
 		 // 
-		 int[] a = new int[down-up+fill];
+//		 int[] a = new int[down-up+fill];
 //		 int idx =0;
 //		 if(fill <= up) {
 //			 for(int i=fill ;i<=(down-up+fill);i++) {
@@ -80,7 +80,7 @@ public class ModifierUtil {
 			 do {
 				 arr.add(cc);
 				 ++cc;
-			 }while(cc <= (down-up+indexOf));
+			 }while(cc <= (down-up+indexOf));// C7选3，那么第1 位可以排 1到7-3+1 = 5，第2位 能排2到7-3+2=6，第3位只能排3到7-3+3=7
 			 map.put(ac, arr);
 		 }
 		 for(int i =0;i<map.size();i++) {
@@ -90,6 +90,7 @@ public class ModifierUtil {
 			 }
 		 }
 		 
+		 /**笨办法选6位**/
 		 List<Integer> l1 = map.get(1);		 
 		 List<Integer> l2 = map.get(2);		 
 		 List<Integer> l3 = map.get(3);	
@@ -155,8 +156,6 @@ public class ModifierUtil {
 						}
 						ex++;
 					}
-					
-					 
 					 dx++;
 				 }
 				 bx++;
@@ -167,27 +166,36 @@ public class ModifierUtil {
 //			 Logger.log(aaa[0] +"-"+aaa[1]+"-"+aaa[2] +"-"+aaa[3]+"-"+aaa[4]+"-"+aaa[5]);
 ////			 System.out.println(aaa[0] +"-"+aaa[1]+"-"+aaa[2] +"-"+aaa[3]+"-"+aaa[4]+"-"+aaa[5]);
 //		 }
+		 // 批量存入库
 		 int num = 0;
 		 int total = all.size();
 		 int n = 1;
 		 int size = 100000;
 		 List<int[]> wan = new ArrayList<int[]>();
+		 List<int[]> wan2 = new ArrayList<int[]>();
 		 for(int[] one : all) {
 			 wan.add(one);
 			 num ++;
 			 if(num < size) {
-				 if(total-(n*size)>size) {
+				 if(total-(n*size)>0) {
+					 continue;
+				 }else {
+					 wan2.add(one);
 					 continue;
 				 }
 			 }
 			 for(int j = 1;j<=16;j++) {
 				 batchInsert(wan,j);
+				 System.out.println("--------n*size="+n+"x"+"100000"+"******"+j);
 			 }
 			 wan.removeAll(wan);
 			 num = 0;
 			 n ++;
 		 }
-		 return a;
+		 for(int j = 1;j<=16;j++) {
+			 batchInsert(wan2,j);
+			 System.out.println("wan2*size---"+wan2.size()+"------j="+j);
+		 }
 	}
 	 
 	static void batchInsert(List<int[]> arr,int blue) {
@@ -293,7 +301,7 @@ public class ModifierUtil {
 //				System.out.println(i);
 //			}
 //		}
-		int[] a = C(3,6,33);
+		C(6,33);
 		
 //		System.out.println(DBUtil.getMySqlConnection());
 		
