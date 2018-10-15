@@ -58,184 +58,45 @@ public class ModifierUtil {
 		
 	}
 	
-	 static void C(int up,int down) {
-		 //边界条件
-		 //边界条件不满足，继续递归
-		 //边界条件满足，跳出递归
-		 
-		 // 这里边界条件： 当你的填充值fill == down 数值时跳出递归
-		 // 
-//		 int[] a = new int[down-up+fill];
-//		 int idx =0;
-//		 if(fill <= up) {
-//			 for(int i=fill ;i<=(down-up+fill);i++) {
-//				 a[idx++] = i;
-//			 }
-//		 }
-		Map<Integer,List> map = new HashMap<Integer,List>();
-		 for(int ac = 1;ac<=up;ac++) {
-			 List<Integer> arr = new ArrayList<Integer>();
-			 int indexOf = ac;
-			 int cc = indexOf;
-			 do {
-				 arr.add(cc);
-				 ++cc;
-			 }while(cc <= (down-up+indexOf));// 例如C7选3，那么第1 位可以排 1到7-3+1 = 5，第2位 能排2到7-3+2=6，第3位只能排3到7-3+3=7
-			 map.put(ac, arr);
-		 }
-		 for(int i =0;i<map.size();i++) {
-			 List<Integer> l = map.get(i+1);
-			 for(Integer j : l) {
-//				 System.out.println(j);
-			 }
-		 }
-		 
-		 
-		 /**笨办法选6位**/
-		 List<Integer> l1 = map.get(1);		 
-		 List<Integer> l2 = map.get(2);		 
-		 List<Integer> l3 = map.get(3);	
-		 List<Integer> l4 = map.get(4);	
-		 List<Integer> l5 = map.get(5);	
-		 List<Integer> l6 = map.get(6);	
-		 List<int[]> all = new ArrayList<int[]>();
-		 int idx1 = 0;
-		 int idx2 = 0;
-		 int idx3 = 0;
-		 int idx4 = 0;
-		 int idx5 = 0;
-		 int idx6 = 0;
-		 int zx = 0;
-		 while(zx<l1.size()) {
-			 idx1 = l1.get(zx);
-			 int bx = 0;
-			 while(bx<l2.size()) {
-				 idx2 = l2.get(bx);
-				 if(idx2 <= idx1) {
-					 bx++;
-					 continue;
-				 }
-				 int dx = 0;
-				 while(dx<l3.size()) {
-					 idx3 = l3.get(dx);
-					 if(idx3 <= idx2 || idx3 <= idx1) {
-						 dx++;
-						 continue;
-					 }
-					int ex = 0;
-					while(ex<l4.size()) {
-						idx4 = l4.get(ex);
-						if(idx4 <= idx3 || idx4 <= idx2 || idx4<=idx1) {
-							ex++;
-							continue;
-						}
-						int fx =0;
-						while(fx<l5.size()) {
-							idx5 = l5.get(fx);
-							if(idx5 <= idx4  ||idx5 <= idx3 || idx5 <= idx2 || idx5<=idx1) {
-								fx++;
-								continue;
-							}
-							int gx = 0;
-							while(gx<l6.size()) {
-								idx6 = l6.get(gx);
-								if(idx6 <=idx5 || idx5 <= idx4  ||idx5 <= idx3 || idx5 <= idx2 || idx5<=idx1) {
-									gx ++;
-									continue;
-								}
-								 int[] abc = new int[6];
-								 abc[0] = idx1;
-								 abc[1] = idx2;
-								 abc[2] = idx3;
-								 abc[3] = idx4;
-								 abc[4] = idx5;
-								 abc[5] = idx6;
-								 all.add(abc);
-								gx++;
-							}
-							fx++;
-						}
-						ex++;
-					}
-					 dx++;
-				 }
-				 bx++;
-			 }
-			 zx++;
-		 }
-//		 for(int[] aaa:all) {
-//			 Logger.log(aaa[0] +"-"+aaa[1]+"-"+aaa[2] +"-"+aaa[3]+"-"+aaa[4]+"-"+aaa[5]);
-////			 System.out.println(aaa[0] +"-"+aaa[1]+"-"+aaa[2] +"-"+aaa[3]+"-"+aaa[4]+"-"+aaa[5]);
-//		 }
-		 
-		 // 批量存入库
-		 int num = 0;
-		 int total = all.size();
-		 int n = 1;
-		 int size = 100000;
-		 List<int[]> wan = new ArrayList<int[]>();
-		 List<int[]> wan2 = new ArrayList<int[]>();
-		 for(int[] one : all) {
-			 wan.add(one);
-			 num ++;
-			 if(num < size) {
-				 if(total-(n*size)>0) {
-					 continue;
-				 }else {
-					 wan2.add(one);
-					 continue;
-				 }
-			 }
-			 for(int j = 1;j<=16;j++) {
-				 batchInsert(wan,j);
-				 System.out.println("--------n*size="+n+"x"+"100000"+"******"+j);
-			 }
-			 wan.removeAll(wan);
-			 num = 0;
-			 n ++;
-		 }
-		 for(int j = 1;j<=16;j++) {
-			 batchInsert(wan2,j);
-			 System.out.println("wan2*size---"+wan2.size()+"------j="+j);
-		 }
-	}
-	 
-	static void batchInsert(List<int[]> arr,int blue) {
-		Connection conn = DBUtil.getMySqlConnection();
-		String sql = "insert into two_color_ball (r1,r2,r3,r4,r5,r6,blue) value (?,?,?,?,?,?,?)";
-		PreparedStatement prest = null;;
-		try {
-			prest = conn.prepareStatement(sql);
-			conn.setAutoCommit(false);
-			for (int i = 0; i < arr.size(); i++) {
-				int[] one = arr.get(i);
-				prest.setInt(1, one[0]);
-				prest.setInt(2, one[1]);
-				prest.setInt(3, one[2]);
-				prest.setInt(4, one[3]);
-				prest.setInt(5, one[4]);
-				prest.setInt(6, one[5]);
-				prest.setInt(7, blue);
-				prest.addBatch();
-			}
-			prest.executeBatch();
-			conn.commit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally {
-			try {
-				if(prest != null) {
-				prest.close();
-				}
-				if(conn != null) {
-					conn.close();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+	static List<int[]> C(int idx,int up,int down){
+		if(up > down || up < 0 || down < 0) {
+			return null;
 		}
-
+		List<int[]> result = new ArrayList<int[]>();
+		if(up == 1) {
+			for(int i = 1;i <= down;i++) {
+				int [] every = new int[up];
+				every[up - 1] = i;
+				result.add(every);
+			}
+		}else if(up == down) {
+			int [] every = new int[up];
+			for(int i = 0;i < down; i++) {
+				every[i] =  i+1;
+			}
+			result.add(every);
+		}else {
+			int[] every = new int[up];
+			
+			Map<Integer,List<Integer>> map = new HashMap<Integer,List<Integer>>();
+			 for(int ac = 1; ac <= up; ac++) {
+				 List<Integer> arr = new ArrayList<Integer>();
+				 int indexOf = ac;
+				 int cc = indexOf;
+				 do {
+					 arr.add(cc);
+					 ++cc;
+				 }while(cc <= (down-up+indexOf));// 例如C7选3，那么第1 位可以排 1到7-3+1 = 5，第2位 能排2到7-3+2=6，第3位只能排3到7-3+3=7
+				 map.put(ac, arr);
+			 }
+			 for(int i = 0;i < every.length;i++) {
+				 List<Integer> list = map.get(i+1);
+				 every[i] = list.get(i);
+			 }
+		}
+		return result;
 	}
+	
 	
 	static int[] maopao(int[] arr) {
 		for(int i=0;i<arr.length;i++) {
@@ -303,7 +164,6 @@ public class ModifierUtil {
 //				System.out.println(i);
 //			}
 //		}
-		C(6,33);
 		
 //		System.out.println(DBUtil.getMySqlConnection());
 		
