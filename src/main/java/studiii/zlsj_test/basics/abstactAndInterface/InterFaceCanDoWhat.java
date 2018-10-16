@@ -11,5 +11,14 @@ public interface InterFaceCanDoWhat {
 	 *  No 1 ==>> 
 	 */
 	int imfield = 1;
+	public static String abc = "abc";
+	
+	String c = "";
 	abstract void method1();
+	void method2();
+	static void method3() {
+	}
+//	static {
+//		System.out.println(1);
+//	}
 }

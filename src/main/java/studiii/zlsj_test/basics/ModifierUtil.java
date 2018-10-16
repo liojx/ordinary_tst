@@ -1,16 +1,10 @@
 package studiii.zlsj_test.basics;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import studiii.zlsj_test.util.DBUtil;
 
 /**
  * @author liaosijun
@@ -147,14 +141,38 @@ public class ModifierUtil {
 		return "";
 	}
 	
-	static String convert(int param) {
-		ModifierEnum[] mod = ModifierEnum.values();
-		for(ModifierEnum one : mod) {
-			System.out.println(one.getDesc());
+	/**
+	 * 
+	 */
+	public static String getModifier(int x) {
+		Integer[] src_modi_int = new Integer[ModifierEnum.values().length];
+		for(int i = 0;i<ModifierEnum.values().length;i++) {
+			src_modi_int[i] = ModifierEnum.values()[i].getKey();
 		}
-		return "";
+		List<Integer[]> zh = new ArrayList<Integer[]>();
+		for(int i =0;i<src_modi_int.length;i++) {
+			CombineUtil.combinationSelect(src_modi_int, i+1);
+			zh.addAll(CombineUtil.list);
+		}
+		String s = "";
+		for(Integer[] every : zh) {
+			int value = 0;
+			for(int i = 0;i<every.length;i++) {
+				value += every[i];
+				for(int j = 0;j<ModifierEnum.values().length;j++) {
+					if(ModifierEnum.values()[j].getKey() == every[i]) {
+						s += ModifierEnum.values()[j].getDesc() + " ";
+					}
+				}
+			}
+			if(value == x) {
+				break;
+			}else {
+				s = "";
+			}
+		}
+		return s;
 	}
-	
 	public static void main(String[] args) {
 //		int[] oo = {15,52,33};
 //		List<int[]>  list = ModifierUtil.luan(oo);
@@ -192,5 +210,8 @@ public class ModifierUtil {
 //		List<String> a = new ArrayList<String>();a.add("1");a.add("1");a.add("1");a.add("1");
 //		a.removeAll(a);
 //		System.out.println(a.size());
+		
+		String s = ModifierUtil.getModifier(480);
+		System.out.println(s);
 	}
 }
