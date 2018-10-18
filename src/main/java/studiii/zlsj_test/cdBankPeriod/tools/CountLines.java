@@ -72,7 +72,7 @@ public class CountLines {
 							}
 						}
 					}else{
-						if(!".svn".equals(f.getName()))
+						if(!".svn".equals(f.getName()) || !".git".equals(f.getName()))
 						getFile(f);
 					}
 				}
@@ -120,7 +120,7 @@ public class CountLines {
 	public static void main(String[] args) {
 //		int s = CountLines.oneFileLines(new File("D:/workspace_project3rd/bocd-csr/lib/ant.jar"));
 //		System.out.println(s);
-		getFile(new File("D:/workspace_project3rd/bocd-csr/"));
+		getFile(new File("C:\\doctorwork_lsj\\eclipse-workspace\\clinic-web"));
 //		for(String s : allFilePath){
 //			System.out.println(s);
 //		}
