@@ -19,6 +19,7 @@ public class FmtStrUtil {
 		System.out.println(p);
 		File file = new File("‪c:/tmmp/fmt.txt");
 		System.out.println(file.exists());
+		System.out.println("中户人民共和国十大元帅");
 	}
 	
 	public static void main(String[] args) {

@@ -28,7 +28,7 @@ public class DoubleFloatEqual {
                && (doubleToLongBits(((Double)obj).value) ==
                       doubleToLongBits(value));
 		 */
-		System.out.println(d.equals(f1)); 
+		System.out.println(d.equals(f1));
 	}
 
 }

@@ -34,9 +34,9 @@ public class ArrayTest {
 	}
 	
 	static void strConstructor1() {
-		char[] charArr = {'a','b','c','中','国','人','d','e','f','g'};
+//		char[] charArr = {'a','b','c','中','国','人','d','e','f','g'};
 //		System.out.println(new String(charArr, 4,10));
-		System.out.println(new String(charArr, 4,2));
+//		System.out.println(new String(charArr, 4,2));
 	}
 	
 	//数组操作还真有点操蛋

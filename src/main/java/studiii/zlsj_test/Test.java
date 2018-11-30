@@ -1,15 +1,6 @@
 package studiii.zlsj_test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import ch.qos.logback.core.net.SyslogOutputStream;
-
+import java.util.*;
 import java.util.Map.Entry;
 
 
@@ -21,11 +12,57 @@ import java.util.Map.Entry;
  */
 public class Test {
 
+
+	static void pt(){
+		ArrayList<String> ar = new ArrayList<String>();
+		ar.add("1");
+		ar.add("c");
+		ar.add("2");
+		ar.add("clm");
+		Object[] br = (Object[]) ar.toArray();
+		for (int i = 0; i < br.length; i++) {
+			System.out.println(br[i]);
+		}
+
+		ArrayList<Long> ar2 = new ArrayList<Long>();
+		ar2.add(1L);
+		ar2.add(2L);
+		ar2.add(3L);
+//		Long[] cr = (Long[]) ar2.toArray();
+		Long[] cr = ar2.toArray(new Long[0]);
+		for (Long l: cr) {
+			System.out.println(l);
+		}
+	}
+
+	public static boolean isBlank(final CharSequence cs) {
+		int strLen;
+		if (cs == null || (strLen = cs.length()) == 0) {
+			return true;
+		}
+		for (int i = 0; i < strLen; i++) {
+			if (!Character.isWhitespace(cs.charAt(i))) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		
+		String bb = String.format("C(%d, %d) = %d", 2, 1, 2);
+		System.out.println(bb);
+		String xrs = "当前挂号已成功，在您前面有%s人候诊，预计候诊时间%s。";
+		String.format(xrs,"3","2018-02");
+		System.out.println(String.format(xrs,"3","2018-02"));
+//		pt();
+//		System.out.println(isBlank("我们都有一个家名字叫中国"));
+//		System.out.println(isBlank("   "));
+//		System.out.println(isBlank(""));
+//		System.out.println(isBlank(null));
 //		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
 //		map.put(1, 3);
 //		map.put(2, 4);
@@ -62,7 +99,7 @@ public class Test {
 //			System.out.println(ar.get(i));
 //		}
 		
-		dt();
+//		dt();
 		
 //		sortByValueDesc();
 	}
@@ -113,4 +150,5 @@ public class Test {
 			System.out.println(monsterAttMap.get(abc));
 		});
 	}
+
 }

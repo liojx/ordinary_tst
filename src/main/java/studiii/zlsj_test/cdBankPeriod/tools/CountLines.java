@@ -129,6 +129,6 @@ public class CountLines {
 //		for(String s : CountLines.getFileType()){
 //			System.out.println(s);
 //		}
-//		System.out.println(getLines());
+		System.out.println(getLines());
 	}
 }

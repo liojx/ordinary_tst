@@ -36,7 +36,7 @@ public class CombineUtil {
 	 * @param n 选择个数 
 	 */ 
 	public static void combinationSelect(Integer[] dataList, int n) {  
-//	    System.out.println(String.format("C(%d, %d) = %d", dataList.length, n, combination(dataList.length, n)));  
+	    System.out.println(String.format("C(%d, %d) = %d", dataList.length, n, combination(dataList.length, n)));
 	    combinationSelect(dataList, 0, new Integer[n], 0);  
 	}  
 	  
