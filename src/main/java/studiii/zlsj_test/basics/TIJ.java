@@ -23,6 +23,19 @@ public class TIJ {
 		System.out.println(o1.abc);
 		System.out.println(o1);
 		System.out.println(o12);
-		
+		TIJ.getC();
+		System.out.println("r="+r);
+		System.out.println(Integer.MAX_VALUE);
+	}
+	
+	static int r = 0;
+	/** 测试void加return*/
+	private static void getC() {
+		int i = 0;
+		for(i=5,r=3;i>0;i--,r++) {
+			if(i == 3) {
+				return; // 结果为把当前值返回出去
+			}
+		}
 	}
 }
