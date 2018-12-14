@@ -32,7 +32,7 @@ public class Tset {
 		calendar.set(Calendar.MILLISECOND, 0);
 		Integer time = (int)((calendar.getTimeInMillis()-System.currentTimeMillis()) /1000);
 		System.out.println(time);
-
+		System.out.println(Tset.class.getResource("/").getPath());
 	}
 
 }
