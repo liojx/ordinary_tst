@@ -11,6 +11,6 @@ public class GetPath {
 		System.out.println("文件路径：" + GetPath.class.getClassLoader().getResource("provider.xml").getPath()); // /C:/doctorwork_lsj/eclipse-workspace/ordinary_tst/target/classes/provider.xml
 		System.out.println( System.getProperty("java.class.path")); 
 		System.out.println(System.getProperty("user.dir"));
-
+		System.out.println( "sdsf==="+ Thread.currentThread().getContextClassLoader().getResource("/").getPath());
 	}
 }

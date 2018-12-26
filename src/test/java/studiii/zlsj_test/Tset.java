@@ -33,6 +33,7 @@ public class Tset {
 		Integer time = (int)((calendar.getTimeInMillis()-System.currentTimeMillis()) /1000);
 		System.out.println(time);
 		System.out.println(Tset.class.getResource("/").getPath());
+		System.out.println(System.getProperty("user.dir"));
 	}
 
 }
