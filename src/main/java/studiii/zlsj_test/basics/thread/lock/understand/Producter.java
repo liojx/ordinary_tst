@@ -25,7 +25,6 @@ public class Producter implements Runnable {
              }
 
              clerk.addProduct();
-
          }
 
      }
