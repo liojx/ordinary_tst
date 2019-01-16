@@ -1,6 +1,5 @@
 package studiii.zlsj_test.basics.thread;
 
-import com.sun.jdi.Method;
 
 /**
  * @author liaosijun

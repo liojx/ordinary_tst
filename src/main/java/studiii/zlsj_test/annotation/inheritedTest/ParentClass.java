@@ -1,6 +1,6 @@
 package studiii.zlsj_test.annotation.inheritedTest;
 
-import studiii.zlsj_test.annotation.target.AnnotationTarget;
+//import studiii.zlsj_test.annotation.target.AnnotationTarget;
 
 /**
  * Author: liaosijun
@@ -13,7 +13,7 @@ public class ParentClass {
 	
 	private String name ;
 	
-	@AnnotationTarget("yes, i am 15")
+//	@AnnotationTarget("yes, i am 15")
 	String age;
 	
 	@MethodTestAnno("yeah")
