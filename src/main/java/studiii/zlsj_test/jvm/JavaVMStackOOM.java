@@ -1,7 +1,7 @@
 package studiii.zlsj_test.jvm;
 
 /**
- * VM args : -Xss2m
+ * VM args : -Xss2m   栈内存设置为2m
  * @author liaosijun
  * @since 2019年1月10日 下午4:46:25
  */

@@ -45,8 +45,8 @@ public class ThisFather {
 		Class clazz = ThisFather.class;
 		Constructor[] cons = clazz.getConstructors();
 		for(Constructor c : cons) {
-			System.out.println(c.getName() + "    " + c.getModifiers() + "   " + c.getParameters()[0].getType());
-//			System.out.println(c.getName() + "    " + c.getModifiers()  );
+//			System.out.println(c.getName() + "    " + c.getModifiers() + "   " + c.getParameters()[0].getType());
+			System.out.println(c.getName() + "    " + c.getModifiers()  );
 		}
 	}
 }
