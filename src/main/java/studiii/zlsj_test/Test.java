@@ -150,5 +150,10 @@ public class Test {
 			System.out.println(monsterAttMap.get(abc));
 		});
 	}
-
+	
+	void ab() {
+		System.out.println(12);
+		System.out.println(122);
+		System.out.println(12);
+	}
 }

@@ -1,0 +1,9 @@
+package studiii.zlsj_test.basics.thread.thinkinjava;
+
+public class BasicThreads {
+	public static void main(String[] args) {
+		Thread t = new Thread(new LiftOff());
+		t.start();
+		System.out.println("等待发射！");
+	}
+}

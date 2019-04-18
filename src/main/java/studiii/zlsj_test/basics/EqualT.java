@@ -1,5 +1,7 @@
 package studiii.zlsj_test.basics;
 
+import java.util.ArrayList;
+
 public class EqualT {
 	public static void main(String[] args) {
 		
@@ -17,5 +19,14 @@ public class EqualT {
 		System.out.println(g == (a + b));
 		System.out.println(g.equals(a + b));
 		
+		// 0010 & 0101 = 0000
+		System.out.println(2&3);
+		System.out.println((2|3) );
+		System.out.println(2^3);
+		System.out.println(~2);
+		System.out.println((2|3)^1);
+		ArrayList arr = new ArrayList();
+		System.out.println(Math.round(11.5));
+		System.out.println(Math.round(-11.5));
 	}
 }
