@@ -1,5 +1,8 @@
 package studiii.zlsj_test;
 
+import java.math.BigDecimal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
 
@@ -49,61 +52,12 @@ public class Test {
 	}
 
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		String bb = String.format("C(%d, %d) = %d", 2, 1, 2);
-		System.out.println(bb);
-		String xrs = "当前挂号已成功，在您前面有%s人候诊，预计候诊时间%s。";
-		String.format(xrs,"3","2018-02");
-		System.out.println(String.format(xrs,"3","2018-02"));
-//		pt();
-//		System.out.println(isBlank("我们都有一个家名字叫中国"));
-//		System.out.println(isBlank("   "));
-//		System.out.println(isBlank(""));
-//		System.out.println(isBlank(null));
-//		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
-//		map.put(1, 3);
-//		map.put(2, 4);
-//		map.put(3, 3);
-//		map.put(4, 2);
-//		
-//		ArrayList<Integer> ar = new ArrayList<Integer>();
-//		ar.add(34);
-//		ar.add(2);
-//		ar.add(114);
-//		ar.add(45);
-//		
-//		
-//		for(int i = 0;i<ar.size();i++) {
-//			System.out.println(ar.get(i));
-//		}
-//		
-//		Collections.sort(ar, new Comparator<Integer>() {
-//
-//			@Override
-//			public int compare(Integer var1, Integer var2) {
-//				// TODO Auto-generated method stub
-//				if(var1 < var2) {
-//					return 1;
-//				}else if(var1 > var2) {
-//					return -1;
-//				}else {
-//					return 0;
-//				}
-//			}
-//		});
-//		
-//		for(int i = 0;i<ar.size();i++) {
-//			System.out.println(ar.get(i));
-//		}
-		
-//		dt();
-		
-//		sortByValueDesc();
+
+	private static void getTI() {
+		long l = 1555054470576l;
+		Date d = new Date(l);
+		System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(d));
 	}
-	
 	private static  void sortByValueDesc(){
         Map<Integer,Integer> tm=new TreeMap<Integer,Integer>();
         tm.put(1, 4);   tm.put(2, 5);
@@ -155,5 +109,73 @@ public class Test {
 		System.out.println(12);
 		System.out.println(122);
 		System.out.println(12);
+	}
+	
+
+	static void minusTime(Date now, String befor){
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		try {
+			Date queryStartDate = simpleDateFormat.parse(befor);
+			long year = 365 * 24 * 3600 * 1000L;
+			long day = 24 * 3600 * 1000L;
+			System.out.println((now.getTime() - queryStartDate.getTime())/day);
+			System.out.println((now.getTime() - queryStartDate.getTime()) -year );
+		} catch (ParseException e) {
+
+		}
+	}
+
+
+	static void  yanshi(String dateS){
+		/**
+		 * 白天 8:30 - 20:00
+		 */
+//		Date date = new Date();
+
+		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		Date date = null;
+		try {
+			date = sdf3.parse(dateS);
+		} catch (ParseException e) {
+
+		}
+		String pre = sdf2.format(date);
+		String dayOrNight =null;
+		try {
+			Date dateBegin = sdf3.parse(pre + " 08:30");
+			Date dateEnd = sdf3.parse(pre + " 20:00");
+			if(date.after(dateBegin) && date.before(dateEnd)){
+				dayOrNight = "d";
+			}else{
+				dayOrNight = "n";
+			}
+			System.out.println("当前dayOrNight_1标志：" + dayOrNight);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	static void decInt(){
+		BigDecimal  ab = new BigDecimal(12);
+		Integer cc = new Integer(123);
+		Map<String, Object> map = new TreeMap<>();
+		map.put("key",cc);
+		BigDecimal ff = BigDecimal.valueOf((Integer)(map.get("key")));
+		System.out.println(ff);
+
+	}
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+//		dt();
+//		sortByValueDesc();
+//		getTI();
+//		minusTime(new Date(),"2018-05-08 09:52:30");
+//		yanshi("2019-05-08 19:59");
+		decInt();
 	}
 }
