@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="studiii.zlsj_test.transaction.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="studiii.zlsj_test.transaction.bean.User">
+        <id column="id" property="id" jdbcType="INTEGER"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+    </resultMap>
+
+
+    <insert id="insert" parameterType="studiii.zlsj_test.transaction.bean.User">
+        INSERT INTO USER (
+        id,
+        name,
+        obj_id)
+        VALUES (
+        #{id,jdbcType=INTEGER},
+        #{name,jdbcType=VARCHAR},
+        #{objId,jdbcType=INTEGER}
+        )
+    </insert>
+
+</mapper>

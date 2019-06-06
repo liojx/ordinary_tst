@@ -1,14 +1,23 @@
 package studiii.zlsj_test;
 
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
-@SpringBootApplication(scanBasePackages = "studiii",exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
-public class Application {
-	
+@EnableSwagger2 // swagger 生效
+@SpringBootApplication(scanBasePackages = "studiii")
+@MapperScan(value = "studiii.zlsj_test.transaction.mapper") // 扫描mybatis xml文件目录
+public class Application extends SpringBootServletInitializer {
+
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(Application.class);
+	}
+
 	public static void main(String[] args) {
 		 SpringApplication.run(Application.class, args);
 	}

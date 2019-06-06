@@ -1,0 +1,9 @@
+server.port=2464
+server.servlet.context-path=/ord-t
+spring.application.name=ord-t
+spring.profiles.active=dev
+
+#db
+jdbc.url=jdbc:mysql://127.0.0.1:3306/test?useUnicode=true&characterEncoding=utf-8
+jdbc.username=lsj
+jdbc.password=liaosijun

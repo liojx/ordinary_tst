@@ -1,19 +1,6 @@
 package studiii.zlsj_test.cdBankPeriod.tools;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.FilterInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-
-import net.sf.jxls.transformation.RemoveTransformation;
+import java.io.*;
 
 /**
  * 
@@ -79,7 +66,6 @@ public class IOStreamOperTest {
 	
 	/**
 	 * 反编译出来每行前面有注释，除掉这些注释
-	 * @param args
 	 */
 	public void removeUnusedCode () {
 		BufferedReader reader = null;

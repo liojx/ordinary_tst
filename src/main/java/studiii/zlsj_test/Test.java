@@ -1,5 +1,7 @@
 package studiii.zlsj_test;
 
+import studiii.zlsj_test.util.io.FileUtil;
+
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -167,6 +169,39 @@ public class Test {
 		System.out.println(ff);
 
 	}
+
+	static void sf(){
+		String abc = String.format("%s%d", "REDIS_LOCK_BILLING_CHARGE_LOG:", Long.parseLong("121121323"));
+		System.out.println(abc);
+	}
+
+	static void dxs() {
+		String str = FileUtil.fileToString(FileUtil.filePath);
+		String newStr = str.replaceAll(",", " "); // 去空格
+		String[] tempStr = newStr.split("`"); // 数据分组
+		String[] t = tempStr[0].split(" ");// 分组标题
+		int k = 1; // 纪录数组下标
+		int j = tempStr.length / t.length; // 计算循环次数
+//		OrderWeChatPO po = null;
+//		sb.append("对账异常：具体消息如下<br>");
+		String orderNo = "";
+		String money = "";
+		for (int i = 0; i < j; i++) {
+			for (int l = 0; l < t.length; l++) {
+				// System.out.println( l + "订单号:" + tempStr[l + k]);
+				if (l == 6) {
+					orderNo = tempStr[l + k];
+				}
+				if (l == 18) {
+					money = tempStr[l + k];
+					break;
+				}
+			}
+			k = k + t.length;
+			System.out.println("订单号:" + orderNo);
+			System.out.println("订单金额:" + money);
+		}
+	}
 	/**
 	 * @param args
 	 */
@@ -176,6 +211,10 @@ public class Test {
 //		getTI();
 //		minusTime(new Date(),"2018-05-08 09:52:30");
 //		yanshi("2019-05-08 19:59");
-		decInt();
+//		decInt();
+//		sf();
+		dxs();
 	}
+
+
 }
