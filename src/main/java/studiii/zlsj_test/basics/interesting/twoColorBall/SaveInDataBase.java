@@ -1,18 +1,12 @@
 package studiii.zlsj_test.basics.interesting.twoColorBall;
 
+import studiii.zlsj_test.util.DBUtil;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
-
-import studiii.zlsj_test.util.DBUtil;
+import java.util.*;
 
 /**
  * @author liaosijun
@@ -164,7 +158,7 @@ public class SaveInDataBase {
 	 
 	static void batchInsert(List<int[]> arr,int blue) {
 		Connection conn = DBUtil.getMySqlConnection();
-		String sql = "insert into two_color_ball (r1,r2,r3,r4,r5,r6,blue) value (?,?,?,?,?,?,?)";
+		String sql = "insert into two_color_ball (r1,r2,r3,r4,r5,r6,blue) values (?,?,?,?,?,?,?)";
 		PreparedStatement prest = null;;
 		try {
 			prest = conn.prepareStatement(sql);
@@ -200,7 +194,7 @@ public class SaveInDataBase {
 	}
 	static void batchInsertTmp(List<Integer> arr) {
 		Connection conn = DBUtil.getMySqlConnection();
-		String sql = "insert into two_c_b_tmp (rownum,cnt) value (?,?)";
+		String sql = "insert into two_c_b_tmp (rownum,cnt) values (?,?)";
 		PreparedStatement prest = null;;
 		try {
 			prest = conn.prepareStatement(sql);

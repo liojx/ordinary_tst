@@ -1,4 +1,4 @@
-package studiii.zlsj_test;
+package studiii.zlsj_test.util;
 
 import studiii.zlsj_test.util.io.FileUtil;
 
