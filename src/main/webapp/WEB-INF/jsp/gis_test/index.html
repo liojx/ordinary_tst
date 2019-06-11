@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Liao Da Ye</title>
+    <script src="resources/static/js/jquery-1.7.1.min.js"></script>
+    <script src="resources/static/js/uery-ui-1.8.17.custom.min.js"></script>
+</head>
+<body>
+    <div style="border: 1px solid black;width: 100%;height: 100%">
+        <div style="width:40%;border: 1px solid yellow;float: left">
+            <a href="add.jsp">增加参数</a>
+            <a href="show.jsp">展示参数</a>
+        </div>
+        <div style="width:60%;border: 1px solid darkslategray" id="cDv">
+            <iframe id="rigthFrame" src=""></iframe>
+        </div>
+    </div>
+    <script>
+        function toAdd(){
+            alert($("#rigthFrame"));
+            $("#rigthFrame").src = "add.html";
+        }
+    </script>
+</body>
+</html>
