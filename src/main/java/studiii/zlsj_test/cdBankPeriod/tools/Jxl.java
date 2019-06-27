@@ -1,8 +1,5 @@
 package studiii.zlsj_test.cdBankPeriod.tools;
 
-import java.io.File;
-import java.io.IOException;
-
 import jxl.Workbook;
 import jxl.read.biff.BiffException;
 import jxl.write.Label;
@@ -10,6 +7,9 @@ import jxl.write.WritableSheet;
 import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
+
+import java.io.File;
+import java.io.IOException;
 
 public class Jxl {
 	/**
@@ -19,6 +19,11 @@ public class Jxl {
 	
 	static void write() {
 		File file = new File(fileName);
+		if(!file.exists()) try {
+			file.createNewFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		try {
 			Workbook wk = Workbook.getWorkbook(file);
 			WritableWorkbook wwk = wk.createWorkbook(file, wk);

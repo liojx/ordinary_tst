@@ -3,13 +3,12 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>add</title>
     <script src="../../js/jquery-1.7.1.min.js"></script>
     <script src="../../js/jquery-ui-1.8.17.custom.min.js"></script>
 </head>
 <body>
-<form th:th:action="@{gis/addPram}" method="POST">
+<form th:action="@{gis/addPram}" method="POST">
     <table>
         <tr>
             <td>选择父类：<select style="width: 200px;"></select></td>

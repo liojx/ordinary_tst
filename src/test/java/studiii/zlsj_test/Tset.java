@@ -14,6 +14,11 @@ public class Tset {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		int total = 4000;
+		int pageSize = 5000;
+		System.out.println("000==" + 5041/5000);
+		int page = total/pageSize == 0 ? total/pageSize : total/pageSize + 1;
+		System.out.println("page =======" + page);
 //		// TODO Auto-generated method stub
 //		Integer a = 0;
 //		a = null;

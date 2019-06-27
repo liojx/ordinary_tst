@@ -23,13 +23,14 @@ public class LamdaForListTest {
 		alllist.add("ccc");
 		alllist.add("ddd");
 		alllist.add("ddd");
+		/*System.out.println(alllist.stream().filter(a -> a.equals("2c")).collect(Collectors.toList()));
 		System.out.println("init size = " + alllist.size());
 		// distinct
 		alllist.stream().distinct();
 		System.out.println("after distinc size = " + alllist.stream().distinct().count());
-		/**for (String s: alllist) {
+		*//**for (String s: alllist) {
 			System.out.println(s);
-		}*/
+		}*//*
 		// map
 		//对于Stream中包含的元素使用给定的转换函数进行转换操作，新生成的Stream只包含转换生成的元素。
 		// 这个方法有三个对于原始类型的变种方法，分别是：mapToInt，mapToLong和mapToDouble。这三个方法也比较好理解，
@@ -41,7 +42,7 @@ public class LamdaForListTest {
 
 		//filter
 		//  对于Stream中包含的元素使用给定的过滤函数进行过滤操作，新生成的Stream只包含符合条件的元素
-
+*/
 		List<String> filList = alllist.stream().filter(abc -> abc.indexOf("c") > -1).collect(Collectors.toList());
 		System.out.println("after filter .......");
 		filList.forEach(a -> System.out.println(a));
