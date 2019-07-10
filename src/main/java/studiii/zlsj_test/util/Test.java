@@ -1,5 +1,7 @@
 package studiii.zlsj_test.util;
 
+import com.google.common.base.Joiner;
+import org.springframework.util.StringUtils;
 import studiii.zlsj_test.util.io.FileUtil;
 
 import java.math.BigDecimal;
@@ -202,6 +204,24 @@ public class Test {
 			System.out.println("订单金额:" + money);
 		}
 	}
+
+	static void xc(){
+		String a = "";
+		boolean ab = !StringUtils.isEmpty(a);
+		System.out.println(ab);
+	}
+
+	static void bb() {
+		ArrayList list = new ArrayList<Long>();
+		list.add(1L);
+		list.add(2L);
+		list.add(3L);
+		list.add(4L);
+		list.add(5L);
+		String x = Joiner.on(",").join(list);
+//		System.out.println(StringUtils.join(list.toArray(),","));
+		System.out.println(x);
+	}
 	/**
 	 * @param args
 	 */
@@ -213,7 +233,9 @@ public class Test {
 //		yanshi("2019-05-08 19:59");
 //		decInt();
 //		sf();
-		dxs();
+//		dxs();
+//		xc();
+		bb();
 	}
 
 

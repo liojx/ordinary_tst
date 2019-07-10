@@ -223,6 +223,13 @@
             <version>1.2.58</version>
         </dependency>
 
+        <!--不晓得可靠不-->
+        <dependency>
+            <groupId>cn.hutool</groupId>
+            <artifactId>hutool-all</artifactId>
+            <version>4.5.16</version>
+        </dependency>
+
     </dependencies>
 
 	<build>
@@ -236,7 +243,7 @@
 					<target>1.8</target>
                     <compilerArgs>
                         <!-- 自己lib的包引入方式-->
-                        <arg>${project.basedir}/src/main/webapp/WEB-INF/lib</arg>
+                        <!--<arg>${project.basedir}/src/main/webapp/WEB-INF/lib</arg>-->
                     </compilerArgs>
                 </configuration>
 			</plugin>
