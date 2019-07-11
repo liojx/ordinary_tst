@@ -12,7 +12,7 @@ import java.io.IOException;
  */
 public class FileSizeCount {
 
-	static String fileName = "d:/temp/sizeCount.txt";
+	static String fileName = "d:/temp/nohup.out";
 
 	static File file = null;
 

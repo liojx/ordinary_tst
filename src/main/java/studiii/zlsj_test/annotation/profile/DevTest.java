@@ -1,19 +1,15 @@
 package studiii.zlsj_test.annotation.profile;
 
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import studiii.zlsj_test.Application;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.sql.DataSource;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import studiii.zlsj_test.Application;
 
 /**
  * Author: liaosijun
@@ -21,7 +17,7 @@ import studiii.zlsj_test.Application;
  * DateTime: 2018年9月18日 上午11:21:58
  * Modified By:
  */
-@RunWith(SpringRunner.class)
+//@RunWith(SpringRunner.class)
 @SpringBootTest(classes = Application.class)//这里的Application是springboot的启动类名
 public class DevTest {
 //

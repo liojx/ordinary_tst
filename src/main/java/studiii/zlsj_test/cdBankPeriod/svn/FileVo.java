@@ -4,45 +4,45 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FileVo {
-	
+
 	/**
-	 * ±»ÕìÌ½µÄÄ¿Â¼
+	 * è¢«ä¾¦æ¢çš„ç›®å½•
 	 */
 	private String detectDirectory;
-	
+
 	/**
-	 * ÎÄ¼ş£¨·ÇÄ¿Â¼£©¾ø¶ÔÂ·¾¶
+	 * æ–‡ä»¶ï¼ˆéç›®å½•ï¼‰ç»å¯¹è·¯å¾„
 	 */
 	private String filePath;
-	
+
 	/**
-	 * ÎÄ¼şÄ¿Â¼¾ø¶ÔÂ·¾¶
+	 * æ–‡ä»¶ç›®å½•ç»å¯¹è·¯å¾„
 	 */
 	private String fileDirectoryPath;
-	
+
 	/**
-	 * ×îºóĞŞ¸ÄÊ±¼ä
+	 * æœ€åä¿®æ”¹æ—¶é—´
 	 */
 	private Date lastModifyTime;
-	
+
 	/**
-	 * ¼ÇÂ¼ÎÄ¼şÊ±¼ä
+	 * è®°å½•æ–‡ä»¶æ—¶é—´
 	 */
 	private Date saveTime;
-	
+
 	/**
-	 * ÎÄ¼ş´óĞ¡£¨µ¥Î»£º×Ö½Ú£©
+	 * æ–‡ä»¶å¤§å°ï¼ˆå•ä½ï¼šå­—èŠ‚ï¼‰
 	 */
 	private Long size;
-	
+
 	/**
-	 * ÎÄ¼şÀàĞÍ 1-ÎÄ¼ş 2-Ä¿Â¼
+	 * æ–‡ä»¶ç±»å‹ 1-æ–‡ä»¶ 2-ç›®å½•
 	 */
 	private String type;
-	
-	
+
+
 	/**
-	 * ÊÇ·ñ´æÔÚ  1-´æÔÚ 0-ÒÑ¾­É¾³ı
+	 * æ˜¯å¦å­˜åœ¨  1-å­˜åœ¨ 0-å·²ç»åˆ é™¤
 	 */
 	private String exists;
 
@@ -173,18 +173,18 @@ public class FileVo {
 	public void setExists(String exists) {
 		this.exists = exists;
 	}
-	
+
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return "±»ÕìÌ½µÄÄ¿Â¼£º"+this.detectDirectory +"\t" 
-		+"ÎÄ¼ş¾ø¶ÔÂ·¾¶£º"+this.filePath +"\t"
-		+"ÎÄ¼ş×îºóĞŞ¸ÄÊ±¼ä£º"+sdf.format(this.lastModifyTime)+"\t"
-		+"ÎÄ¼ş±£´æÊ±¼ä:"+sdf.format(this.saveTime)+"\t"
-		+"ÎÄ¼şµÄ¸¸Ä¿Â¼¾ø¶ÔÂ·¾¶£º"+this.fileDirectoryPath+"\t"
-		+"ÎÄ¼şµÄ´óĞ¡£º"+this.size+"\t"
-		+"ÎÄ¼şµÄÀàĞÍ£º"+this.type+"\t"
-		+"ÎÄ¼şÊÇ·ñ´æÔÚ£º"+this.exists;
+		return "è¢«ä¾¦æ¢çš„ç›®å½•ï¼š"+this.detectDirectory +"\t"
+				+"æ–‡ä»¶ç»å¯¹è·¯å¾„ï¼š"+this.filePath +"\t"
+				+"æ–‡ä»¶æœ€åä¿®æ”¹æ—¶é—´ï¼š"+sdf.format(this.lastModifyTime)+"\t"
+				+"æ–‡ä»¶ä¿å­˜æ—¶é—´:"+sdf.format(this.saveTime)+"\t"
+				+"æ–‡ä»¶çš„çˆ¶ç›®å½•ç»å¯¹è·¯å¾„ï¼š"+this.fileDirectoryPath+"\t"
+				+"æ–‡ä»¶çš„å¤§å°ï¼š"+this.size+"\t"
+				+"æ–‡ä»¶çš„ç±»å‹ï¼š"+this.type+"\t"
+				+"æ–‡ä»¶æ˜¯å¦å­˜åœ¨ï¼š"+this.exists;
 	}
 }
