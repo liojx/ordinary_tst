@@ -222,6 +222,27 @@ public class Test {
 //		System.out.println(StringUtils.join(list.toArray(),","));
 		System.out.println(x);
 	}
+
+	static void bcx() {
+		String sr = "";
+		System.out.println(sr.split(",").length);
+		System.out.println(sr.length());
+		String xc ="  dsadf xxd  sdf  ";
+		System.out.println(StringUtils.trimWhitespace(xc).length());
+	}
+
+	static void percent() {
+		int a = 34;
+		int b = 23;
+		int c = 43;
+
+		int total = 505;
+		Double p = 100.00;
+
+		System.out.println((int)(total*(a/p)));
+		System.out.println((int)(total*(b/p)));
+		System.out.println((int)(total*(c/p)));
+	}
 	/**
 	 * @param args
 	 */
@@ -235,8 +256,11 @@ public class Test {
 //		sf();
 //		dxs();
 //		xc();
-		bb();
+//		bb();
+//		bcx();
+		percent();
 	}
+
 
 
 }

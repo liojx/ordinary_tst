@@ -3,6 +3,7 @@ package studiii.zlsj_test.util.pgdb;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.google.common.collect.Lists;
 import org.postgis.PGgeometry;
 import org.postgresql.util.PGobject;
 import org.springframework.util.StringUtils;
@@ -291,14 +292,76 @@ public class PgGisDataInitUtils {
 	}
 
 	void updateData(){
-		String sql1 = "";
+		String sql = "select id, data_info from gis_dev_ext where caliber is not null";
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		List list = Lists.newArrayList();
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql);
+			while (rst.next()) {
+				Length l = new Length();
+				Object datainfo =  rst.getObject("data_info");
+				Long id = rst.getLong("id");
+				l.setObj(datainfo);
+				l.setId(id);
+				list.add(l);
+			}
+
+			String sql2 = "update gis_dev_ext set data_info = ? where caliber is not null and id = ?";
+			prest = conn.prepareStatement(sql2);
+			int i =0;
+			conn.setAutoCommit(false);
+			for (Object objjj : list) {
+				Length obj = (Length)objjj;
+				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
+				jb.remove("length");
+				System.out.println("================>" + obj.getObj().toString());
+				PGobject jsonObject = new PGobject();
+				jsonObject.setValue(JSONObject.toJSONString(jb));
+				jsonObject.setType("jsonb");
+				prest.setObject(1, jsonObject);
+				prest.setLong(2,obj.getId());
+				prest.addBatch();
+				System.out.println("-------->" + jb.toString() + (i++));
+			}
+			// 并发死锁，如果没有设置autocommit false
+			prest.executeBatch();
+			conn.commit();
+			System.out.println("complete...");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+//			try{
+//				if(prest!= null){
+//					prest.close();
+//				}
+//				if(rst != null){
+//					rst.close();
+//				}
+//				if(stt != null){
+//					stt.close();
+//				}
+//				if(conn != null){
+//					conn.close();
+//				}
+//			}catch (Exception e){
+//				e.printStackTrace();
+//			}
+		}
+
+
 	}
+
 	public static void main(String[] args) {
 		PgGisDataInitUtils p = new PgGisDataInitUtils();
-//		p.dealLine();
-//		p.dealLineData();
 		try {
-			p.dealPoint();
+//			p.dealLine();
+//			p.dealLineData();
+//			p.dealPoint();
+			p.updateData();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
@@ -350,6 +413,27 @@ public class PgGisDataInitUtils {
 
 		public void setGeom(PGgeometry geom) {
 			this.geom = geom;
+		}
+	}
+
+	private class Length{
+		private Long id;
+		private Object obj;
+
+		public Long getId() {
+			return id;
+		}
+
+		public void setId(Long id) {
+			this.id = id;
+		}
+
+		public Object getObj() {
+			return obj;
+		}
+
+		public void setObj(Object obj) {
+			this.obj = obj;
 		}
 	}
 }
