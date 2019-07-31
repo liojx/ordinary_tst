@@ -1,6 +1,8 @@
 package studiii.zlsj_test.ordinaryTest;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
+import org.assertj.core.util.Lists;
+
+import java.util.List;
 
 /**
  * Author: liaosijun
@@ -9,7 +11,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
  * Modified By:
  */
 public class ArrayTest {
-	
+
 	public static void main(String[] args) {
 //		Integer[] a = new Integer[] {1,2,3};
 //		a[a.length] =  5; //失败，数组定长

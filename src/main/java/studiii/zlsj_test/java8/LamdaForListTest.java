@@ -1,5 +1,7 @@
 package studiii.zlsj_test.java8;
 
+import org.assertj.core.util.Lists;
+
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -10,7 +12,43 @@ import java.util.stream.Collectors;
  * @Time: 2019/5/7 14:42
  */
 public class LamdaForListTest {
+
+	private static List<Integer> listA = Lists.newArrayList();
+	private static List<Integer> listB = Lists.newArrayList();
+	static {
+		listA.add(1);
+		listA.add(3);
+		listA.add(5);
+		listA.add(6);
+		listA.add(9);
+		listA.add(10);
+		listA.add(6);
+	}
+
+	static {
+		listB.add(3);
+		listB.add(6);
+		listB.add(345);
+		listB.add(10);
+	}
+
+	static void filterTest(){
+//		listA.stream().filter();
+//		System.out.println(listA);
+//		listA.stream().anyMatch(l -> listB.contains(l));
+
+		// 取交集
+		System.out.println(listB.retainAll(listA));
+		System.out.println(listA);
+		System.out.println(listB);
+	}
+
 	public static void main(String[] args) {
+		System.out.println("--------filterTest----------------sss--------");
+		filterTest();
+		System.out.println("--------filterTest----------------eee--------");
+
+
 		ArrayList<String> alllist = new ArrayList<>();
 		alllist.add("1");
 		alllist.add("1a");
