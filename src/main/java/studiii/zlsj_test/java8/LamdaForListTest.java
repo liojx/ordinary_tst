@@ -13,6 +13,36 @@ import java.util.stream.Collectors;
  */
 public class LamdaForListTest {
 
+	public class TestClass{
+		private String uui;
+		private String code;
+		private String name;
+
+		public String getUui() {
+			return uui;
+		}
+
+		public void setUui(String uui) {
+			this.uui = uui;
+		}
+
+		public String getCode() {
+			return code;
+		}
+
+		public void setCode(String code) {
+			this.code = code;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+
 	private static List<Integer> listA = Lists.newArrayList();
 	private static List<Integer> listB = Lists.newArrayList();
 	static {
@@ -32,6 +62,36 @@ public class LamdaForListTest {
 		listB.add(10);
 	}
 
+	public static List<TestClass> onDealList = Lists.newArrayList();
+
+	public void fillClassList() {
+		TestClass testClass1 = new TestClass();
+		testClass1.setCode("BBC");
+		testClass1.setName("L");
+		testClass1.setUui("NCJFFFF");
+		onDealList.add(testClass1);
+
+		TestClass testClass2 = new TestClass();
+		testClass2.setCode("JJV");
+		testClass2.setName("L");
+		testClass2.setUui("NCJFFFF");
+		onDealList.add(testClass2);
+
+		TestClass testClass3 = new TestClass();
+		testClass3.setCode("BBB");
+		testClass3.setName("L");
+		testClass3.setUui("NCJFFFF");
+		onDealList.add(testClass3);
+
+		TestClass testClass4 = new TestClass();
+		testClass4.setCode("KKC");
+		testClass4.setName("L");
+		testClass4.setUui("NCJFFFF");
+		onDealList.add(testClass4);
+	}
+
+	public static String[] excludeCode = {"KKC","BBC"};
+
 	static void filterTest(){
 //		listA.stream().filter();
 //		System.out.println(listA);
@@ -48,7 +108,15 @@ public class LamdaForListTest {
 		filterTest();
 		System.out.println("--------filterTest----------------eee--------");
 
-
+		System.out.println("-----------------------xxxx---------------------");
+		LamdaForListTest lamdaForListTest = new LamdaForListTest();
+		lamdaForListTest.fillClassList();
+		List<String> jj = Arrays.asList(excludeCode);
+		List<TestClass> abclist = onDealList.stream().filter(a->!jj.contains(a)).collect(Collectors.toList());
+		abclist.stream().forEach(c->{
+			System.out.println("after filter-->" + c.getCode());
+		});
+		System.out.println("-----------------------xxxx---------------------");
 		ArrayList<String> alllist = new ArrayList<>();
 		alllist.add("1");
 		alllist.add("1a");

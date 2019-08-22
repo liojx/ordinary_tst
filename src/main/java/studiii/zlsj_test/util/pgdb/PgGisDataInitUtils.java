@@ -8,12 +8,10 @@ import org.postgis.PGgeometry;
 import org.postgresql.util.PGobject;
 import org.springframework.util.StringUtils;
 
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.Date;
 
 /**
  * @Description: 初始化数据到pg数据库中
@@ -22,7 +20,7 @@ import java.util.Map;
  */
 public class PgGisDataInitUtils {
 
-	private final static String host_url = "jdbc:postgresql://192.168.80.70:5432/gis?characterEncoding=UTF-8";
+	private final static String host_url = "jdbc:postgresql://192.168.80.106:5432/gis?characterEncoding=UTF-8";
 	private final static String user = "postgres";
 	private final static String pwd = "123456";
 
@@ -292,7 +290,8 @@ public class PgGisDataInitUtils {
 	}
 
 	void updateData(){
-		String sql = "select id, data_info from gis_dev_ext where caliber is not null";
+//		String sql = "select id, data_info from gis_dev_ext where caliber is not null";
+		String sql = getSqlFromxxxxml();
 		Statement stt = null;
 		ResultSet rst = null;
 		PreparedStatement prest = null;
@@ -303,8 +302,10 @@ public class PgGisDataInitUtils {
 			rst = stt.executeQuery(sql);
 			while (rst.next()) {
 				Length l = new Length();
-				Object datainfo =  rst.getObject("data_info");
-				Long id = rst.getLong("id");
+				Object datainfo =  rst.getObject("datainfo");
+//				Object datainfo =  rst.getObject("data_info");
+//				Long id = rst.getLong("id");
+				Long id = rst.getLong("devid");
 				l.setObj(datainfo);
 				l.setId(id);
 				list.add(l);
@@ -314,11 +315,37 @@ public class PgGisDataInitUtils {
 			prest = conn.prepareStatement(sql2);
 			int i =0;
 			conn.setAutoCommit(false);
+//			for (Object objjj : list) {
+//				Length obj = (Length)objjj;
+//				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
+//				jb.remove("length");
+//				System.out.println("================>" + obj.getObj().toString());
+//				PGobject jsonObject = new PGobject();
+//				jsonObject.setValue(JSONObject.toJSONString(jb));
+//				jsonObject.setType("jsonb");
+//				prest.setObject(1, jsonObject);
+//				prest.setLong(2,obj.getId());
+//				prest.addBatch();
+//				System.out.println("-------->" + jb.toString() + (i++));
+//			}
+
+			long today = new Date().getTime();
+			long oneDay = 24 * 3600 * 1000;
+			long second = 1000;
+			int ix = 1;
+			int bx = 40;
+			// 增加data_info 一个字段
 			for (Object objjj : list) {
+
 				Length obj = (Length)objjj;
+				if(Objects.isNull(obj.getObj())) {
+					continue;
+				}
 				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
-				jb.remove("length");
-				System.out.println("================>" + obj.getObj().toString());
+				Date d = new Date(today - (oneDay * ix++));
+				Date dt = new Date(today - (oneDay * ix++) + second * bx ++);
+				jb.fluentPut("install_date", d);
+				jb.fluentPut("fix_time",  dt);
 				PGobject jsonObject = new PGobject();
 				jsonObject.setValue(JSONObject.toJSONString(jb));
 				jsonObject.setType("jsonb");
@@ -353,6 +380,23 @@ public class PgGisDataInitUtils {
 		}
 
 
+	}
+
+	public static String  getSqlFromxxxxml() {
+		String fileName = "/temp.sql";
+		File sqlFile = new File(PgGisDataInitUtils.class.getResource(fileName).getFile());
+		BufferedReader reader = null;
+		StringBuffer sb = new StringBuffer();
+		try {
+			reader = new BufferedReader(new FileReader(sqlFile));
+			String str = null;
+			while((str = reader.readLine()) != null){
+				sb.append(str + "\n");
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return String.valueOf(sb);
 	}
 
 	public static void main(String[] args) {
