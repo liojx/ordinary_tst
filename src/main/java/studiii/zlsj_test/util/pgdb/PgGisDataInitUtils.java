@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
+import org.apache.commons.collections.MapUtils;
 import org.postgis.PGgeometry;
 import org.postgresql.util.PGobject;
 import org.springframework.util.StringUtils;
@@ -14,6 +15,7 @@ import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  * @Description: 初始化数据到pg数据库中
@@ -23,31 +25,19 @@ import java.util.Date;
 public class PgGisDataInitUtils {
 
 	private final static String host_url = "jdbc:postgresql://119.3.141.56:5432/gis?characterEncoding=GBK";
+//	private final static String host_url = "jdbc:postgresql://192.168.80.70:5432/test?characterEncoding=GBK";
 	private final static String user = "postgres";
 	private final static String pwd = "JDgis_pg0911";
+//	private final static String pwd = "postgres";
 
 	public static Connection getConn(){
 		Connection conn = null;
 		try {
 			Class.forName("org.postgresql.Driver").newInstance();
 			conn = DriverManager.getConnection(host_url, user, pwd);
-//			Statement st = conn.createStatement();
-//			String sql = "select * from dev.gis_dict_detail";
-//			ResultSet rs = st.executeQuery(sql);
-//			while (rs.next()) {
-//				System.out.print(rs.getLong(1) + "\t");
-//				System.out.print(rs.getLong(2) + "\t");
-//				System.out.print(rs.getString(3) + "\t");
-//				System.out.print(rs.getString(4) + "\t");
-//				System.out.println("\n");
-//			}
-//			rs.close();
-//			st.close();
-//			conn.close();
 		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
-
 		}
 		return conn;
 	}
@@ -62,7 +52,7 @@ public class PgGisDataInitUtils {
 		Connection conn = getConn();
 		int size = 2000;  // 每次处理1000条
 		int page = 0;
-		String sql_t = "select count(*) from xx_point";
+		String sql_t = "select count(*) from jz_line";
 		int total = 0;
 		Statement stt = null;
 		ResultSet rst = null;
@@ -100,14 +90,7 @@ public class PgGisDataInitUtils {
 				conn.setAutoCommit(false);
 				while (rs.next()) {
 					PointNow pointNow = new PointNow();
-//					String code = rs.getString(2);
-//					int kj = rs.getInt(3);
-//					int caliber = rs.getInt("gj");
 					long id = rs.getLong("gid");
-//					PGgeometry geom = (PGgeometry)rs.getObject(4);
-//					pointNow.setGeom(geom);
-//					pointNow.setKj(caliber);
-//					pointNow.setCode(code);
 					pointNow.setId(id);
 					String name = rs.getString("name");
 					pointNow.setName(name);
@@ -116,50 +99,18 @@ public class PgGisDataInitUtils {
 					list.add(pointNow);
 				}
 				for (PointNow p : list){
-//					prest.setString(1,new String("输配水管".getBytes("UTF-8")));
-//					prest.setString(2,p.getCode());
-//					prest.setInt(3,p.getKj());
-//					prest.setObject(4,p.getGeom());
-//					prest.setInt(5,p.getId());
-//					int caliber = p.getKj();
-//					String name = "";
-//					long type_id = 0L;
-//					if (caliber >= 900) {
-//						name = "DN900（含）以上管段";
-//						type_id = 14;
-//					} else if ( caliber >= 600 && caliber < 900){
-//						name = "DN600-DN900管段";
-//						type_id = 12;
-//					} else if ( caliber >= 400 && caliber < 600) {
-//						name = "DN400-DN600管段";
-//						type_id = 11;
-//					} else if (caliber >= 200 && caliber < 400) {
-//						name = "DN200-DN400管段";
-//						type_id = 10;
-//					} else if (caliber >= 100 && caliber < 200) {
-//						name = "DN100-DN200管段";
-//						type_id = 8;
-//					} else {
-//						name = "DN100（不含）以下管段";
-//						type_id = 9;
-//					}
-
-
 					prest.setLong(1,p.getId());
 					prest.setLong(2,p.getTypeId());
 					prest.setString(3,  p.getName());
 					prest.setString(4,"GISSERVICE");
 					prest.setString(5,"admin");
 					prest.setString(6,"admin");
-
 					prest.addBatch();
 				}
 				prest.executeBatch();
 				conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
-//			} catch (UnsupportedEncodingException e) {
-//				e.printStackTrace();
 			} finally {
 				try {
 					rs.close();
@@ -192,8 +143,6 @@ public class PgGisDataInitUtils {
 				fields = rst.getString(1);
 			}
 			if (!StringUtils.isEmpty(fields)){
-//				fields = fields.replace("geom","");
-//				fields = fields.replace("dev_id","a.id");
 			}
 
 			String[] abc = fields.split(",");
@@ -206,9 +155,6 @@ public class PgGisDataInitUtils {
 				int i = 0;
 				HashMap map = new HashMap();
 				while(len-- > 0) {
-//					if(abc[i].equals("a.id")){
-//						abc[i] = "id";
-//					}
 					map.put(abc[i], rst.getObject(abc[i++]));
 				}
 				list.add(map);
@@ -268,7 +214,10 @@ public class PgGisDataInitUtils {
 		}
 	}
 
-	/** 更新data_info水管数据*/
+	/**
+	 * 更新 gis_dev_ext 中 data_info 的所有数据
+	 * 河北冀州
+	 */
 	public void updatedealPIPEData(){
 		String colSql = "select string_agg(field_name,',') from gis_dev_tpl_attr where type_id = 13";
 		Statement stt = null;
@@ -282,19 +231,16 @@ public class PgGisDataInitUtils {
 			while (rst.next()) {
 				fields = rst.getString(1);
 			}
-			if (fields.contains("geom,")) {
+			if (fields.contains("geom,")) { // 取消geom字段
 				fields = fields.replace("geom,","");
 			} else if (fields.contains(",geom")) {
 				fields = fields.replace(",geom", "");
 			}
-
-			if  (fields.contains("name,")) {
+			if  (fields.contains("name,")) { // 取消name字段
 				fields = fields.replace("name,","");
 			} else if (fields.contains(",name")) {
 				fields = fields.replace(",name","");
 			}
-
-
 			String[] abc = fields.split(",");
 			String sql2 = "SELECT " + fields + " , id from  (select id,qdbh start_code, zdbh end_code, cz material, gj caliber,qdms start_depth, zdms end_depth, mslx cover_mode,azrq install_date, chr mapping_man from xx_line_copy1 ) a left join (select id dev_id from share_dev) b on a.id = b.dev_id";
 			rst = stt.executeQuery(sql2);
@@ -308,9 +254,7 @@ public class PgGisDataInitUtils {
 				}
 				list.add(map);
 			}
-
 			List<String> LogList = Lists.newArrayList();
-
 			int size = 1000;
 			int total = list.size();
 			int loopcnt = total/size == 0 ? total/size : total/size + 1;
@@ -339,12 +283,10 @@ public class PgGisDataInitUtils {
 				conn.commit();
 				step ++;
 			}
-
 			int ii = 0;
 			for (String s : LogList){
 				System.out.println(++ii + "-->" + s);
 			};
-
 			System.out.println("complete ......................  ........... ");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -362,7 +304,10 @@ public class PgGisDataInitUtils {
 
 
 
-	/** 更新data_info管点数据*/
+	/**
+	 * 更新data_info管点数据
+	 * 河北冀州
+	 */
 	public void updatedealPOINTData(){
 		String colSql = "select string_agg(field_name,',') from gis_dev_tpl_attr where type_id = 1 ";
 		Statement stt = null;
@@ -387,9 +332,6 @@ public class PgGisDataInitUtils {
 			} else if (fields.contains(",name")) {
 				fields = fields.replace(",name","");
 			}
-
-
-//			String[] abc = fields.split(",");
 			String[] abc = "code,x,y,ground_height,depth,spec,material,well_spec,addr,remark,mapping_man,dev_id".split(",");
 			String sql2 = "select 管点编 code, x坐标 x, y坐标 y, 地面高 ground_height, 埋深 depth, 规格 spec, 材质 material, 井规格 well_spec, 道路名 addr, 备注 remark, 测绘人 mapping_man,gid dev_id from xx_point";
 			rst = stt.executeQuery(sql2);
@@ -403,9 +345,7 @@ public class PgGisDataInitUtils {
 				}
 				list.add(map);
 			}
-
 			List<String> LogList = Lists.newArrayList();
-
 			int size = 1000;
 			int total = list.size();
 			int loopcnt = total/size == 0 ? total/size : total/size + 1;
@@ -439,7 +379,6 @@ public class PgGisDataInitUtils {
 			for (String s : LogList){
 				System.out.println(++ii + "-->" + s);
 			};
-
 			System.out.println("complete ......................  ........... ");
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -502,8 +441,6 @@ public class PgGisDataInitUtils {
 			}
 			list.add(map);
 		}
-
-
 			int size = 1000;
 			int total = list.size();
 			int loopcnt = total/size == 0 ? total/size : total/size + 1;
@@ -771,6 +708,195 @@ public class PgGisDataInitUtils {
 
 	}
 
+
+	/**
+	 * 河北冀州，处理管网数据, 存放到gis_dev_line的数据
+	 */
+	private void dealLine2(){
+		/**
+		 * 我们表对应数据字段5个： 设备模板ID、管网名称、管网编号、口径、空间信息
+		 */
+		Connection conn = getConn();
+		int size = 2000;  // 每次处理1000条
+		int page = 0;
+		String sql_t = "select count(*) from xx_line_copy1";
+		int total = 0;
+		Statement stt = null;
+		ResultSet rst = null;
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql_t);
+			while (rst.next()) {
+				total = rst.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rst.close();
+				stt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		int loopcnt = total/size == 0 ? total/size : total/size + 1;
+		if (total < size) {
+			loopcnt = 1;
+		}
+		while (loopcnt-- > 0) {
+			String querySql = "select * from xx_line_copy1";
+			String int_sql = "insert into share_dev (id,type_id,name,platform_code,create_by,update_by) VALUES (?,?,?,'GISSERVICE','admin','admin')";
+			PreparedStatement prest = null;
+			ResultSet rs = null;
+			Statement st = null;
+			try {
+				List<ShareDev> list = new ArrayList<ShareDev>();
+				st = conn.createStatement();
+				prest = conn.prepareStatement(querySql);
+				rs = prest.executeQuery();
+				while (rs.next()) {
+					ShareDev dev = new ShareDev();
+					dev.setId(rs.getLong("id"));
+					dev.setCaliber(rs.getString("gj") == null ? 0 : Integer.parseInt(rs.getString("gj")));
+					list.add(dev);
+				}
+				prest = conn.prepareStatement(int_sql);
+				conn.setAutoCommit(false);
+				for (ShareDev p : list){
+					String name = "";
+					int caliber = p.getCaliber();
+					long type_id = 0L;
+					if (caliber >= 900) {
+						name = "DN900（含）以上管段";
+						type_id = 14;
+					} else if ( caliber >= 600 && caliber < 900){
+						name = "DN600-DN900管段";
+						type_id = 12;
+					} else if ( caliber >= 400 && caliber < 600) {
+						name = "DN400-DN600管段";
+						type_id = 11;
+					} else if (caliber >= 200 && caliber < 400) {
+						name = "DN200-DN400管段";
+						type_id = 10;
+					} else if (caliber >= 100 && caliber < 200) {
+						name = "DN100-DN200管段";
+						type_id = 8;
+					} else {
+						name = "DN100（不含）以下管段";
+						type_id = 9;
+					}
+
+					prest.setLong(1,p.getId());
+					prest.setLong(2,type_id);
+					prest.setString(3,name);
+					prest.addBatch();
+				}
+				prest.executeBatch();
+				conn.commit();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			} finally {
+				try {
+					if (rs != null) rs.close();
+					if (st != null) st.close();
+					if (prest != null) prest.close();
+					if (conn != null) conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			page ++;
+			System.out.println("导入 " + page  + " page");
+		}
+		System.out.println("completed");
+	}
+
+	/**
+	 * 河北冀州
+	 * 把水管数据存进 gis_dev_ext
+	 */
+	public void dealLineData2(){
+		String colSql = "select string_agg(field_name,',') from gis_dev_tpl_attr where type_id = 13";
+		Statement stt = null;
+		ResultSet rst = null;
+		Connection conn = getConn();
+		String fields = null;
+		PreparedStatement prest = null;
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(colSql);
+			while (rst.next()) {
+				fields = rst.getString(1);
+			}
+			String[] abc = fields.split(",");
+			String sql2 = "SELECT " + fields + "  from  (select id,qdbh start_code, zdbh end_code, cz material, gj caliber,qdms start_depth, zdms end_depth, mslx cover_mode,azrq install_date, chr mapping_man,geom  from xx_line_copy1 ) a left join (select id dev_id, type_id,name from share_dev) b on a.id = b.dev_id";
+			rst = stt.executeQuery(sql2);
+			ArrayList<HashMap<String,Object>> list = new ArrayList<>();
+			while (rst.next()) {
+				int len = abc.length;
+				int i = 0;
+				HashMap map = new HashMap();
+				while(len-- > 0) {
+					map.put(abc[i], rst.getObject(abc[i++]));
+				}
+				list.add(map);
+			}
+
+			int size = 1000;
+			int total = list.size();
+			int loopcnt = total/size == 0 ? total/size : total/size + 1;
+			if (total < size) {
+				loopcnt = 1;
+			}
+			String int_sql = "insert into gis_dev_ext (dev_id,name,code,caliber,material, geom,data_info,tpl_type_id,create_by,update_by) values (?,?,?,?,?,?,?,13,'admin','admin')";
+			prest = conn.prepareStatement(int_sql);
+			conn.setAutoCommit(false);
+			int step = 0;
+			while (loopcnt-- > 0) {
+				List<HashMap<String,Object>> subList = (List<HashMap<String, Object>>) list.subList(step*size,(step+1) * size > total ? total : (step+1) * size);
+				for (HashMap<String,Object> map : subList){
+					Long dev_id = Long.parseLong(String.valueOf(map.get("dev_id")));
+					String name = String.valueOf(map.get("name"));
+					String code = (String) map.get("start_code") + "-" + (String) map.get("end_code");
+					int caliber = Integer.parseInt(String.valueOf(map.get("caliber") == null ? 0 : map.get("caliber")));
+					String material = (String) map.get("material");
+					Object geom = map.get("geom");
+					JSONObject a = new JSONObject();
+					a.putAll(map);
+					a.remove("geom"); // 删除geom
+					String jsonStr = JSONObject.toJSONString(a, SerializerFeature.WriteMapNullValue);
+					PGobject jsonObject = new PGobject();
+					jsonObject.setValue(jsonStr);
+					jsonObject.setType("json");
+
+					prest.setLong(1, dev_id);
+					prest.setString(2, name);
+					prest.setString(3, code);
+					prest.setInt(4, caliber);
+					prest.setString(5, material);
+					prest.setObject(6,geom);
+					prest.setObject(7,jsonObject);
+					prest.addBatch();
+				}
+				prest.executeBatch();
+				conn.commit();
+				step ++;
+			}
+			System.out.println("导入成功！");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if (rst != null) rst.close();
+				if (stt != null) stt.close();
+				if (prest != null) prest.close();
+				if (conn != null) conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public static void main(String[] args) {
 		PgGisDataInitUtils p = new PgGisDataInitUtils();
 		try {
@@ -779,9 +905,11 @@ public class PgGisDataInitUtils {
 //			p.dealPoint();
 //			p.updateData();
 //			p.updateData1();
-			p.updateData2();
+//			p.updateData2();
 //			p.updatedealPIPEData();
 //			p.updatedealPOINTData();
+//			p.dealLine2();
+			p.dealLineData2();
 		}catch (Exception e){
 			e.printStackTrace();
 		}
