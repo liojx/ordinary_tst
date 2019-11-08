@@ -389,7 +389,7 @@ public class HeBeiJiZhouGIS {
 		HeBeiJiZhouGIS heBeiJiZhouGIS = new HeBeiJiZhouGIS();
 //		heBeiJiZhouGIS.dealLine();
 //		heBeiJiZhouGIS.dealPoint();
-//		heBeiJiZhouGIS.dealLineData();
-		heBeiJiZhouGIS.dealPointData();
+		heBeiJiZhouGIS.dealLineData();
+//		heBeiJiZhouGIS.dealPointData();
 	}
 }
