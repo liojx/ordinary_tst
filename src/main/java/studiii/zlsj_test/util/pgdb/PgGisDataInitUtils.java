@@ -24,10 +24,11 @@ import java.util.stream.Collectors;
  */
 public class PgGisDataInitUtils {
 
-	private final static String host_url = "jdbc:postgresql://119.3.141.56:5432/gis?characterEncoding=GBK";
+//	private final static String host_url = "jdbc:postgresql://119.3.141.56:5432/gis?characterEncoding=GBK";
 //	private final static String host_url = "jdbc:postgresql://192.168.80.70:5432/test?characterEncoding=GBK";
+	private final static String host_url = "jdbc:postgresql://223.247.199.63:5432/gis?characterEncoding=GBK";
 	private final static String user = "postgres";
-	private final static String pwd = "JDgis_pg0911";
+	private final static String pwd = "jdrxaaa1233*";
 //	private final static String pwd = "postgres";
 
 	public static Connection getConn(){

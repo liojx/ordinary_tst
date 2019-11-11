@@ -27,4 +27,5 @@ public class ShareDev {
 	private Date update_at;
 	private Integer del_flag;
 	private Integer caliber;
+	private Long tmpGID;
 }
