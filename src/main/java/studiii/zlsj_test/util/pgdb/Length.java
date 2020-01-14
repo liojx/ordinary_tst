@@ -10,6 +10,17 @@ public class Length {
 	private Object obj;
 	private String code;
 	private String name;
+	private String devId;
+
+	public String getMer() {
+		return mer;
+	}
+
+	public void setMer(String mer) {
+		this.mer = mer;
+	}
+
+	private String mer;
 
 	public String getCode() {
 		return code;
@@ -42,5 +53,13 @@ public class Length {
 
 	public void setObj(Object obj) {
 		this.obj = obj;
+	}
+
+	public String getDevId() {
+		return devId;
+	}
+
+	public void setDevId(String devId) {
+		this.devId = devId;
 	}
 }

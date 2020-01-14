@@ -25,7 +25,7 @@ public class GuangANGisUtil {
 
 	/**
 	 * step 1 ： 把临时表ga_line_all的数据导入到share_dev中
-	 *
+	 *  注意那个 每种水管对应的type_id
 	 * @param args
 	 */
 	private void dealLine() throws Exception {
@@ -147,22 +147,22 @@ public class GuangANGisUtil {
 					long type_id = 0L;
 					if (caliber >= 900) {
 						name = "DN900（含）以上管段";
-						type_id = 14;
+						type_id = 128;
 					} else if (caliber >= 600 && caliber < 900) {
 						name = "DN600-DN900管段";
-						type_id = 12;
+						type_id = 129;
 					} else if (caliber >= 400 && caliber < 600) {
 						name = "DN400-DN600管段";
-						type_id = 11;
+						type_id = 400;
 					} else if (caliber >= 200 && caliber < 400) {
 						name = "DN200-DN400管段";
-						type_id = 10;
+						type_id = 130;
 					} else if (caliber >= 100 && caliber < 200) {
 						name = "DN100-DN200管段";
-						type_id = 8;
+						type_id = 131;
 					} else {
 						name = "DN100（不含）以下管段";
-						type_id = 9;
+						type_id = 132;
 					}
 
 					prest.setLong(1, dev.getId());
@@ -176,6 +176,7 @@ public class GuangANGisUtil {
 				System.out.println("导入了" + (i+1) + " 页");
 			} catch (SQLException e) {
 				e.printStackTrace();
+				conn.rollback();
 			} finally {
 				try {
 					if (rs != null) rs.close();
@@ -301,6 +302,7 @@ public class GuangANGisUtil {
 				conn.commit();
 			} catch (SQLException e) {
 				e.printStackTrace();
+				conn.rollback();
 			} finally {
 				try {
 					rs.close();
@@ -354,7 +356,7 @@ public class GuangANGisUtil {
 			if (total < size) {
 				loopcnt = 1;
 			}
-			String int_sql = "insert into gis_dev_ext (dev_id,name,code,caliber,material, geom,tpl_type_id,data_info,create_by,update_by) values (?,?,?,?,?,?,?,?,'admin','admin')";
+			String int_sql = "insert into gis_dev_ext (dev_id,name,code,caliber,material, geom,tpl_type_id,data_info,create_by,update_by,belong_to) values (?,?,?,?,?,?,?,?,'admin','admin',?)";
 			prest = conn.prepareStatement(int_sql);
 			conn.setAutoCommit(false);
 			int step = 0;
@@ -368,6 +370,7 @@ public class GuangANGisUtil {
 					String name = (String) map.get("name");
 					String code = (String) map.get("qdbm") + "-" + (String) map.get("zdbm");
 					int caliber = Integer.parseInt(String.valueOf(map.get("caliber")));
+					Long belongTo = map.get("belong_to") == null ?  -1 : Long.parseLong(String.valueOf(map.get("belong_to")));
 					String material = (String) map.get("mer");
 					Object geom = map.get("geom");
 					prest.setLong(1, id);
@@ -377,6 +380,7 @@ public class GuangANGisUtil {
 					prest.setString(5, material);
 					prest.setObject(6, geom);
 					prest.setLong(7, 13);
+
 
 					// 封装data_info 数据
 					if (map.containsKey("geom")) {
@@ -388,6 +392,7 @@ public class GuangANGisUtil {
 					jsonObject.setType("json");
 
 					prest.setObject(8, jsonObject);
+					prest.setLong(9, belongTo);
 					prest.addBatch();
 					real++;
 				}
@@ -449,7 +454,7 @@ public class GuangANGisUtil {
 			if (total < size) {
 				loopcnt = 1;
 			}
-			String int_sql = "insert into gis_dev_ext (dev_id,name,code,material, geom,tpl_type_id,data_info,create_by,update_by) values (?,?,?,?,?,?,?,'admin','admin')";
+			String int_sql = "insert into gis_dev_ext (dev_id,name,code,material, geom,tpl_type_id,data_info,create_by,update_by,belong_to) values (?,?,?,?,?,?,?,'admin','admin',?)";
 			prest = conn.prepareStatement(int_sql);
 			conn.setAutoCommit(false);
 			int step = 0;
@@ -464,6 +469,7 @@ public class GuangANGisUtil {
 					String name = (String) map.get("name");
 					String code = (String) map.get("code");
 					String material = map.get("jgcz") == null ? "" : String.valueOf(map.get("jgcz"));
+					Long belongTo = map.get("qsdw") == null ? -1: Long.parseLong(String.valueOf(map.get("qsdw")));
 					Object geom = map.get("geom");
 					Long typeId = Long.parseLong(String.valueOf(map.get("type_id")));
 					prest.setLong(1, id);
@@ -486,6 +492,7 @@ public class GuangANGisUtil {
 					jsonObject.setType("json");
 
 					prest.setObject(7, jsonObject);
+					prest.setLong(8, belongTo);
 					prest.addBatch();
 					realRow++;
 				}

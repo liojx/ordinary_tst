@@ -4,11 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.commons.collections.MapUtils;
 import org.postgis.PGgeometry;
 import org.postgresql.util.PGobject;
 import org.springframework.util.StringUtils;
 import studiii.zlsj_test.cdBankPeriod.tools.Jxl;
+import studiii.zlsj_test.transaction.bean.Obj;
 
 import java.io.*;
 import java.sql.*;
@@ -24,12 +26,15 @@ import java.util.stream.Collectors;
  */
 public class PgGisDataInitUtils {
 
-//	private final static String host_url = "jdbc:postgresql://119.3.141.56:5432/gis?characterEncoding=GBK";
-//	private final static String host_url = "jdbc:postgresql://192.168.80.70:5432/test?characterEncoding=GBK";
-	private final static String host_url = "jdbc:postgresql://223.247.199.63:5432/gis?characterEncoding=GBK";
+	private final static String host_url = "jdbc:postgresql://119.3.141.56:5432/gis?characterEncoding=GBK";
+//	private final static String host_url = "jdbc:postgresql://192.168.80.70:5432/gis?characterEncoding=GBK";
+//	private final static String host_url = "jdbc:postgresql://223.247.199.63:5432/gis?characterEncoding=GBK";
+//	private final static String host_url = "jdbc:postgresql://192.168.80.106:5432/gis?characterEncoding=GBK";
 	private final static String user = "postgres";
-	private final static String pwd = "jdrxaaa1233*";
+//	private final static String pwd = "jdrxaaa1233*";     // 广安
 //	private final static String pwd = "postgres";
+//	private final static String pwd = "123456";
+	private final static String pwd = "JDgis_pg0911"; // 冀州
 
 	public static Connection getConn(){
 		Connection conn = null;
@@ -448,7 +453,11 @@ public class PgGisDataInitUtils {
 			conn.setAutoCommit(false);
 			for (Length obj : list) {
 				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
-				jb.fluentPut("name", obj.getName());
+//				if (jb.containsKey("kcrq")) {
+//					jb.put("kcrq", new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+//				}
+//				jb.remove("geom");
+				jb.remove("dev_id");
 				System.out.println("================>" + jb.toString());
 				PGobject jsonObject = new PGobject();
 				jsonObject.setValue(JSONObject.toJSONString(jb, SerializerFeature.WriteMapNullValue)); // 不省略为null的字段
@@ -487,6 +496,678 @@ public class PgGisDataInitUtils {
 
 	}
 
+	public int selectAllCnt(){
+		String colSql = "select count(1) from gis_dev_ext";
+		Statement stt = null;
+		ResultSet rst = null;
+		Connection conn = getConn();
+		int total = 0;
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(colSql);
+			while (rst.next()) {
+				total = rst.getInt(1);
+			}
+
+			System.out.println("total ......................  ........... " + total);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rst.close();
+				stt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return total;
+	}
+
+	public int selectAllPointCnt(){
+		String colSql = "select count(1) from gis_dev_ext where caliber is null";
+		Statement stt = null;
+		ResultSet rst = null;
+		Connection conn = getConn();
+		int total = 0;
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(colSql);
+			while (rst.next()) {
+				total = rst.getInt(1);
+			}
+
+			System.out.println("total ......................  ........... " + total);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rst.close();
+				stt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return total;
+	}
+
+
+	public int selectAllLineCnt(){
+		String colSql = "select count(1) from gis_dev_ext where caliber is not null";
+		Statement stt = null;
+		ResultSet rst = null;
+		Connection conn = getConn();
+		int total = 0;
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(colSql);
+			while (rst.next()) {
+				total = rst.getInt(1);
+			}
+
+			System.out.println("total ......................  ........... " + total);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				rst.close();
+				stt.close();
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return total;
+	}
+
+	private List<Length> selectAll() {
+		String sql = "select dev_id,  name,geom, data_info ,belong_to,material from gis_dev_ext";
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		List<Length> list = Lists.newArrayList();
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql);
+
+			while (rst.next()) {
+				Length l = new Length();
+				Object datainfo = rst.getObject("data_info");
+				String devId = rst.getString("dev_id");
+				String code = rst.getString("geom");
+				Long belongto = rst.getLong("belong_to");
+				String name = rst.getString("name");
+				String me = rst.getString("material");
+				l.setObj(datainfo);
+				l.setDevId(devId);
+				l.setCode(code);
+				l.setId(belongto);
+				l.setName(name);
+				l.setMer(me);
+
+				list.add(l);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private List<Length> selectAllPoint() {
+		String sql = "select dev_id,  name,geom, data_info ,belong_to,material from gis_dev_ext where caliber is null";
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		List<Length> list = Lists.newArrayList();
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql);
+
+			while (rst.next()) {
+				Length l = new Length();
+				Object datainfo = rst.getObject("data_info");
+				String devId = rst.getString("dev_id");
+				String code = rst.getString("geom");
+				Long belongto = rst.getLong("belong_to");
+				String name = rst.getString("name");
+				String me = rst.getString("material");
+				l.setObj(datainfo);
+				l.setDevId(devId);
+				l.setCode(code);
+				l.setId(belongto);
+				l.setName(name);
+				l.setMer(me);
+
+				list.add(l);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private List<Length> selectAllLine() {
+		String sql = "select dev_id,  name,geom, data_info ,belong_to,material from gis_dev_ext where caliber is not null";
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		List<Length> list = Lists.newArrayList();
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql);
+
+			while (rst.next()) {
+				Length l = new Length();
+				Object datainfo = rst.getObject("data_info");
+				String devId = rst.getString("dev_id");
+				String code = rst.getString("geom");
+				Long belongto = rst.getLong("belong_to");
+				String name = rst.getString("name");
+				String me = rst.getString("material");
+				l.setObj(datainfo);
+				l.setDevId(devId);
+				l.setCode(code);
+				l.setId(belongto);
+				l.setName(name);
+				l.setMer(me);
+
+				list.add(l);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	private List<Length> selectAll2() {
+		String sql = "select dev_id,  name,geom, data_info ,belong_to from gis_dev_ext";
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		List<Length> list = Lists.newArrayList();
+		try {
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql);
+
+			while (rst.next()) {
+				Length l = new Length();
+				Object datainfo = rst.getObject("data_info");
+				String devId = rst.getString("dev_id");
+				String code = rst.getString("geom");
+				Long belongto = rst.getLong("belong_to");
+				String name = rst.getString("name");
+				l.setObj(datainfo);
+				l.setDevId(devId);
+				l.setCode(code);
+				l.setId(belongto);
+				l.setName(name);
+				list.add(l);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+	void updateDataInFo(List<Length> subList){
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		try {
+			String sql2 = "update gis_dev_ext set data_info = ? where dev_id = ?";
+			prest = conn.prepareStatement(sql2);
+			stt = conn.createStatement();
+			int i = 0;
+			conn.setAutoCommit(false);
+			for (Length obj : subList) {
+				String sqll = "SELECT  ROUND((st_length( \'" + obj.getCode() + "\' ))::NUMERIC,3) ";
+				ResultSet resultSet = stt.executeQuery(sqll);
+				double xxx = 0L;
+				while (resultSet.next()) {
+					xxx = resultSet.getDouble(1);
+				}
+
+				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
+//				jb.put("pipe_length", xxx);
+//				long belongTo = obj.getId();
+//				if (144 == belongTo | 1 == belongTo) {
+//					jb.put("belong_to", "广安");
+//				} else if (141 == belongTo | 5 == belongTo) {
+//					jb.put("belong_to", "邻水");
+//				} else if (136 == belongTo | 2 == belongTo) {
+//					jb.put("belong_to", "岳池");
+//				}else if (143 == belongTo | 4 == belongTo) {
+//					jb.put("belong_to", "武胜");
+//				}else if (140 == belongTo | 3 == belongTo ) {
+//					jb.put("belong_to", "华蓥");
+//				}else if (142 == belongTo | 6 == belongTo) {
+					jb.put("belong_to", "冀州");
+//				}
+
+				if (jb.containsKey("addr")) {
+					Object o = jb.get("addr");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("address", v);
+					jb.remove("addr");
+				}
+				if (jb.containsKey("ground_height")) {
+					Object o = jb.get("ground_height");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("groundHeight", v);
+					jb.remove("ground_height");
+				}
+
+
+				if (jb.containsKey("mapping_man")) {
+					Object o = jb.get("mapping_man");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("inputstaff", v);
+					jb.remove("mapping_man");
+				}
+
+				if (jb.containsKey("jdjb")) {
+					Object o = jb.get("jdjb");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("precisionRank", v);
+					jb.remove("jdjb");
+				}
+
+				if (jb.containsKey("jdms")) {
+					Object o = jb.get("jdms");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("depth", v);
+					jb.remove("jdms");
+				}
+
+				if (jb.containsKey("cover_mode")) {
+					Object o = jb.get("cover_mode");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("buryType", v);
+					jb.remove("cover_mode");
+				}
+
+				if (jb.containsKey("jgcz")) {
+					Object o = jb.get("jgcz");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("material", v);
+					jb.remove("jgcz");
+				}
+				if (jb.containsKey("start_depth")) {
+					Object o = jb.get("start_depth");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("startDepth", v);
+					jb.remove("start_depth");
+				}
+				if (jb.containsKey("end_depth")) {
+					Object o = jb.get("end_depth");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("endDepth", v);
+					jb.remove("end_depth");
+				}
+
+
+				if (jb.containsKey("jggg")) {
+					Object o = jb.get("jggg");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("spec", v);
+					jb.remove("jggg");
+				}
+
+				if (jb.containsKey("jglx")) {
+					Object o = jb.get("jglx");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("manholeType", v);
+					jb.remove("jglx");
+				}
+
+
+				if (jb.containsKey("kcdw")) {
+					Object o = jb.get("kcdw");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("surveyCompany", v);
+					jb.remove("kcdw");
+				}
+
+				if (jb.containsKey("qsdw")) {
+					Object o = jb.get("qsdw");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("belong_to", v);
+					jb.remove("qsdw");
+				}
+
+				if (jb.containsKey("ysdm")) {
+					jb.remove("ysdm");
+				}
+				if (jb.containsKey("dev_id")) {
+					jb.remove("dev_id");
+				}
+
+				if (jb.containsKey("kcrq")) {
+					Object o = jb.get("kcrq");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("surveyDate", v);
+					jb.remove("kcrq");
+				}
+
+				if (jb.containsKey("mer")) {
+					Object o = jb.get("mer");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("material", v);
+					jb.remove("mer");
+				}
+
+				if (jb.containsKey("qdbm")) {
+					Object o = jb.get("qdbm");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("startCode", v);
+					jb.remove("qdbm");
+				}
+
+				if (jb.containsKey("zdbm")) {
+					Object o = jb.get("zdbm");
+					String v = "";
+					if (Objects.nonNull(o)) {
+						v = String.valueOf(o);
+					}
+					jb.put("endCode", v);
+					jb.remove("zdbm");
+				}
+
+				if(jb.containsKey("mer_type_code")) {
+					jb.remove("mer_type_code");
+				}
+
+
+				PGobject jsonObject = new PGobject();
+				jsonObject.setValue(JSONObject.toJSONString(jb, SerializerFeature.WriteMapNullValue)); // 不省略为null的字段
+				jsonObject.setType("jsonb");
+				prest.setObject(1, jsonObject);
+				prest.setString(2,String.valueOf(obj.getDevId()));
+				prest.addBatch();
+				System.out.println("-------->" + jb.toString() + (i++));
+			}
+			// 并发死锁，如果没有设置autocommit false
+			prest.executeBatch();
+			conn.commit();
+			System.out.println("complete...");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try{
+				if(prest!= null){
+					prest.close();
+				}
+				if(rst != null){
+					rst.close();
+				}
+				if(stt != null){
+					stt.close();
+				}
+				if(conn != null){
+					conn.close();
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+
+	}
+
+	void updateDataInFo2(List<Length> subList){
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		try {
+			String sql2 = "update gis_dev_ext set data_info = ? where dev_id = ?";
+			prest = conn.prepareStatement(sql2);
+			stt = conn.createStatement();
+			int i = 0;
+			conn.setAutoCommit(false);
+			List<Map<String, String>> maps = Jxl.get2();
+			for (Length obj : subList) {
+				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
+				String devId = obj.getDevId();
+				for (Map<String, String> xm : maps) {
+					String dev_id = xm.get("dev_id");
+					String startCode = xm.get("startCode");
+					String endCode = xm.get("endCode");
+					if (devId.equals(dev_id)) {
+						jb.put("startCode", startCode);
+						jb.put("endCode", endCode);
+						jb.remove("code");
+						break;
+					}
+				}
+				PGobject jsonObject = new PGobject();
+				jsonObject.setValue(JSONObject.toJSONString(jb, SerializerFeature.WriteMapNullValue)); // 不省略为null的字段
+				jsonObject.setType("jsonb");
+				prest.setObject(1, jsonObject);
+				prest.setString(2,String.valueOf(obj.getDevId()));
+				prest.addBatch();
+				System.out.println("-------->" + jb.toString() + (i++));
+			}
+			// 并发死锁，如果没有设置autocommit false
+			prest.executeBatch();
+			conn.commit();
+			System.out.println("complete...");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try{
+				if(prest!= null){
+					prest.close();
+				}
+				if(rst != null){
+					rst.close();
+				}
+				if(stt != null){
+					stt.close();
+				}
+				if(conn != null){
+					conn.close();
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+
+	}
+
+	static int js = 0;
+	void updateDataInFo3(List<Length> subList){
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		try {
+			String sql2 = "update gis_dev_ext set data_info = ? where dev_id = ?";
+			prest = conn.prepareStatement(sql2);
+			stt = conn.createStatement();
+			int i = 0;
+			conn.setAutoCommit(false);
+			for (Length obj : subList) {
+				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
+						jb.put("precisionRank","物探");
+						jb.put("surveyCompany","正元地理信息有限责任公司四川分公司");
+						if (Objects.isNull(jb.get("surveyDate"))) {
+							jb.put("surveyDate", null);
+						}
+				if (jb.containsKey("startCode") && jb.containsKey("endCode")) {
+					jb.put("startDepth",null);
+					jb.put("endDepth", null);
+					jb.put("buryType",null);
+				}
+//				if (jb.containsKey("startCode") && jb.containsKey("endCode")) {
+//
+//					String sqll = "SELECT  ROUND((st_length( \'" + obj.getCode() + "\' ))::NUMERIC,3) ";
+//					ResultSet resultSet = stt.executeQuery(sqll);
+//					double xxx = 0L;
+//					while (resultSet.next()) {
+//						xxx = resultSet.getDouble(1);
+//					}
+//					jb.put("pipe_length", xxx);
+//				} else {
+//					jb.remove("pipe_length");
+//				}
+//				long belongTo = obj.getId();
+//				if (144 == belongTo | 1 == belongTo) {
+//					jb.put("belong_to", "广安");
+//				} else if (141 == belongTo | 5 == belongTo) {
+//					jb.put("belong_to", "邻水");
+//				} else if (136 == belongTo | 2 == belongTo) {
+//					jb.put("belong_to", "岳池");
+//				}else if (143 == belongTo | 4 == belongTo) {
+//					jb.put("belong_to", "武胜");
+//				}else if (140 == belongTo | 3 == belongTo ) {
+//					jb.put("belong_to", "华蓥");
+//				}else if (142 == belongTo | 6 == belongTo) {
+//					jb.put("belong_to", "前锋");
+//				}
+//				String name = obj.getName();
+//				jb.put("name", name);
+//				String mer = obj.getMer();
+//				jb.put("material", mer);
+//				Double d = null;
+//				if (jb.containsKey("depth")) {
+//					Object depth = jb.get("depth");
+//					String depthS = "";
+//					if ("0E-11".equals(depth) || "".equals(depth)) {
+//						depthS = "0";
+//					} else {
+//						depthS = String.valueOf(depth);
+//					}
+//					d = Double.parseDouble(depthS);
+//					jb.put("depth", d);
+//				}
+				PGobject jsonObject = new PGobject();
+				jsonObject.setValue(JSONObject.toJSONString(jb, SerializerFeature.WriteMapNullValue)); // 不省略为null的字段
+				jsonObject.setType("jsonb");
+				prest.setObject(1, jsonObject);
+				prest.setString(2,String.valueOf(obj.getDevId()));
+				prest.addBatch();
+				System.out.println("-------->" + jb.toString() + (js++));
+			}
+			// 并发死锁，如果没有设置autocommit false
+			prest.executeBatch();
+			conn.commit();
+			System.out.println("complete...");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try{
+				if(prest!= null){
+					prest.close();
+				}
+				if(rst != null){
+					rst.close();
+				}
+				if(stt != null){
+					stt.close();
+				}
+				if(conn != null){
+					conn.close();
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+
+
+	}
+
+	private void updateExt() {
+		int total = selectAllCnt();
+		List<Length> list = selectAll();
+		int PAGE_SIZE = 1000;
+		int loopcnt = total / PAGE_SIZE == 0 ? total / PAGE_SIZE : total / PAGE_SIZE + 1;
+		if (total < PAGE_SIZE) {
+			loopcnt = 1;
+		}
+		int step = 0;
+		while (loopcnt-- > 0) {
+			List<Length> subList = list.subList(step * PAGE_SIZE,
+					(step + 1) * PAGE_SIZE > total ? total : (step + 1) * PAGE_SIZE);
+			try {
+				updateDataInFo(subList);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			step++;
+		}
+	}
+
 	/** excle 里面的某个字段更新到jsonb的对应字段，只支持postgis 9.5*/
 	void updateData2(){
 		Statement stt = null;
@@ -495,23 +1176,37 @@ public class PgGisDataInitUtils {
 		Connection conn = getConn();
 		try {
 
-			List<Map<String,String>> excelList = Jxl.get();
+//			List<Map<String,String>> excelList = Jxl.get();
+			String sql = "select id, st_x(geom) from gis_dev_ext where  belong_to = 153 and caliber is null";
 
-			String sql2 = "UPDATE gis_dev_ext set data_info = jsonb_set(data_info, '{depth}', ? :: jsonb,false) :: jsonb where code = ? ";
+			stt = conn.createStatement();
+			rst = stt.executeQuery(sql);
+			List<Map<Long, String>> ll = Lists.newArrayList();
+			while (rst.next()) {
+				Long l = rst.getLong(1);
+				String xy = rst.getString(2);
+				Map<Long, String> m = Maps.newHashMap();
+				m.put(l, xy);
+				ll.add(m);
+			}
+
+			String sql2 = "UPDATE gis_dev_ext set data_info = jsonb_set(data_info, '{x}', ? :: jsonb,false) :: jsonb where  belong_to = 153 " +
+					"and  caliber is null  and id = ?";
 			prest = conn.prepareStatement(sql2);
 			int i =0;
 			conn.setAutoCommit(false);
-			for (Map<String, String> stringMap : excelList) {
-				String code = stringMap.get("code");
-				String val = stringMap.get("val");
-				System.out.println("code = " + code + "-------" + "val = " + val + " ||| " + i++);
-				prest.setString(1, val);
-				prest.setString(2, code);
+			for (Map<Long, String> stringMap : ll) {
+
+				Long id = stringMap.keySet().iterator().next();
+				String s = stringMap.get(id);
+				prest.setString(1, s);
+				prest.setLong(2, id);
 				prest.addBatch();
 			}
 
 			// 并发死锁，如果没有设置autocommit false
-			 prest.executeBatch();
+//			 prest.executeBatch();
+			prest.execute();
 			conn.commit();
 			System.out.println("complete...");
 		} catch (SQLException e) {
@@ -540,6 +1235,71 @@ public class PgGisDataInitUtils {
 
 
 
+	public void updateLngLat() {
+		Statement stt = null;
+		ResultSet rst = null;
+		PreparedStatement prest = null;
+		Connection conn = getConn();
+		List<Length> lengths = selectAllPoint();
+		try {
+			String sql2 = "update share_dev set lng = ? , lat = ? where id = ?";
+			prest = conn.prepareStatement(sql2);
+			stt = conn.createStatement();
+			conn.setAutoCommit(false);
+			int i = 0;
+			for (Length obj : lengths) {
+				String devId = obj.getDevId();
+				JSONObject jb = JSONObject.parseObject(obj.getObj().toString());
+				Object x = jb.get("x");
+				String xx = String.valueOf(x);
+				Object y = jb.get("y");
+				String yy = String.valueOf(y);
+				try {
+					if (Double.parseDouble(xx) < 100 && Double.parseDouble(yy) < 200) {
+						continue;
+					}
+				} catch (Exception e) {
+					System.out.println(xx + "," + yy+"," + devId);
+				}
+				prest.setString(1, xx);
+				prest.setString(2, yy);
+				prest.setString(3,devId);
+				prest.addBatch();
+
+				System.out.println("-------->i=" + (i++) +"," + devId + "x="+xx +",y="+yy);
+			}
+			// 并发死锁，如果没有设置autocommit false
+			prest.executeBatch();
+			conn.commit();
+			System.out.println("complete...");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		} finally {
+			try{
+				if(prest!= null){
+					prest.close();
+				}
+				if(rst != null){
+					rst.close();
+				}
+				if(stt != null){
+					stt.close();
+				}
+				if(conn != null){
+					conn.close();
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}
+		}
+	}
+
+
 	public static void main(String[] args) {
 		PgGisDataInitUtils p = new PgGisDataInitUtils();
 		try {
@@ -551,6 +1311,9 @@ public class PgGisDataInitUtils {
 //			p.updateData2();
 //			p.updatedealPIPEData();
 //			p.updatedealPOINTData();
+//			p.updateDataInFo();
+			p.updateExt();     // 这个方法是更新 data_info 的数据
+//			p.updateLngLat();
 		}catch (Exception e){
 			e.printStackTrace();
 		}

@@ -25,6 +25,8 @@ public class Jxl {
 	static String fileName = "d:/temp/ktree1.xls";
 
 	static String fileName2 = "D:/Temp/aaa.xls";
+
+	static String fileName3 = "C:\\Users\\Liao_\\Desktop\\line.xls";
 	
 	static void write() {
 		File file = new File(fileName);
@@ -93,7 +95,32 @@ public class Jxl {
 	}
 
 
+	public static List<Map<String, String>> get2() {
+		File file = new File(fileName3);
+		List list = Lists.newArrayList();
+		try {
+			Workbook wk = Workbook.getWorkbook(file);
+			Sheet sheet = wk.getSheet(0);
+			int all = sheet.getRows();
+			for (int i = 0; i < all; i++) {
+				Map<String, String> map = Maps.newHashMap();
+				Cell[] cells = sheet.getRow(i);
+				map.put("dev_id", String.format("%-12s",cells[0].getContents()));
+				map.put("startCode", cells[1].getContents());
+				map.put("endCode", cells[2].getContents());
+				list.add(map);
+			}
+		} catch (BiffException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return list;
+	}
+
+
 	public static void main(String[] args) {
-		Jxl.write();
+//		Jxl.write();
+//		System.out.println(String.format("%-12s","12345") +"|");
 	}
 }
